@@ -42,7 +42,6 @@
     .day-cell.has-wish::after { content: ''; width: 6px; height: 6px; background: var(--primary); border-radius: 50%; position: absolute; bottom: 4px; }
     .day-cell.selected { background: var(--primary); color: white; }
     
-    /* 28 Августа - Особый день */
     .day-cell.anniversary-day { background: #FFE0E6; border: 2px solid #FF3366; color: #FF3366; font-weight: 800; }
     .day-cell.anniversary-day::before { content: '💖'; font-size: 10px; position: absolute; top: 2px; right: 2px; }
 
@@ -73,13 +72,13 @@
     .save-btn-krosh { background: var(--krosh-color); }
     .save-btn-honest { background: #FF9800; }
 
-    /* Недовольства список */
+    .sent-preview-box { background: rgba(255, 255, 255, 0.7); border-radius: 14px; padding: 10px; font-size: 13px; border: 1px solid rgba(0,0,0,0.05); }
+
     .discontent-item { background: white; padding: 12px; border-radius: 16px; display: flex; flex-direction: column; gap: 6px; border-left: 4px solid #FF9800; }
     .discontent-author { font-size: 12px; font-weight: 800; color: #E65100; }
     .discontent-text { font-size: 14px; line-height: 1.4; }
     .resolve-btn { background: #4CAF50; color: white; border: none; padding: 6px 12px; border-radius: 10px; font-weight: 700; font-size: 12px; align-self: flex-end; cursor: pointer; }
 
-    /* Тетрис styling */
     #tetrisCanvas { background: #111; border-radius: 12px; margin: 0 auto; display: block; }
     .tetris-controls { display: flex; justify-content: center; gap: 10px; margin-top: 10px; }
     .t-btn { background: #7C4DFF; color: white; border: none; width: 44px; height: 44px; border-radius: 12px; font-size: 18px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; }
@@ -99,7 +98,6 @@
     </div>
     <div class="content">
       
-      <!-- Месяц и Переключатель -->
       <div class="month-nav">
         <button class="nav-btn" onclick="changeMonth(-1)">❮</button>
         <span id="monthYearText">Месяц Год</span>
@@ -108,7 +106,6 @@
 
       <div class="calendar-grid" id="calendarGrid"></div>
 
-      <!-- Баннер 28 Августа -->
       <div id="anniversaryBanner" class="anniversary-banner" style="display: none;">
         🎉 28 августа — День начала наших отношений! 💖✨
       </div>
@@ -134,7 +131,11 @@
           <div class="card-title krosh-text">✍️ Написать пожелание Крошу:</div>
           <textarea id="nyushaWriteText" class="input-field" placeholder="Напиши что-нибудь милое для Кроша..."></textarea>
           <input type="text" id="nyushaWriteImg" class="input-field" placeholder="Ссылка на фото (необязательно)...">
-          <button class="save-btn save-btn-nyusha" onclick="saveNyushaWish()">Отправить Крошу 💖</button>
+          <button class="save-btn save-btn-nyusha" id="nyushaSaveBtn" onclick="saveNyushaWish()">Отправить Крошу 💖</button>
+          
+          <div id="nyushaSentPreview" class="sent-preview-box" style="display: none;">
+            <strong>Твой отправленный текст:</strong> <span id="nyushaSentText"></span>
+          </div>
           <div id="nyushaStatusInfo" style="font-size: 13px; text-align: center; color: var(--text-light);"></div>
         </div>
       </div>
@@ -156,12 +157,16 @@
           <div class="card-title nyusha-text">✍️ Написать пожелание Нюше:</div>
           <textarea id="kroshWriteText" class="input-field" placeholder="Напиши пожелание или комплимент..."></textarea>
           <input type="text" id="kroshWriteImg" class="input-field" placeholder="Ссылка на фото (необязательно)...">
-          <button class="save-btn save-btn-krosh" onclick="saveKroshWish()">Отправить Нюше 💖</button>
+          <button class="save-btn save-btn-krosh" id="kroshSaveBtn" onclick="saveKroshWish()">Отправить Нюше 💖</button>
+
+          <div id="kroshSentPreview" class="sent-preview-box" style="display: none;">
+            <strong>Твой отправленный текст:</strong> <span id="kroshSentText"></span>
+          </div>
           <div id="kroshStatusInfo" style="font-size: 13px; text-align: center; color: var(--text-light);"></div>
         </div>
       </div>
 
-      <!-- ЧЕСТНЫЙ УГОЛОК (ЧЕМ МЫ НЕДОВОЛЬНЫ) -->
+      <!-- ЧЕСТНЫЙ УГОЛОК -->
       <div class="section-card honest-card">
         <div class="card-title" style="color: #E65100;">😤 Чем мы недовольны / Честный уголок</div>
         <div style="font-size: 13px; color: #8D6E63;">Выпиши сюда то, что тебя расстроило или тревожит, чтобы вместе обсудить и решить!</div>
@@ -221,6 +226,8 @@
     db.ref('wishes_v2').on('value', (snapshot) => {
       wishesData = snapshot.val() || {};
       initCalendar();
+    }, (err) => {
+      alert("❌ Ошибка соединения с Firebase: " + err.message + "\nПроверьте правила доступа в консоли!");
     });
 
     db.ref('discontents').on('value', (snapshot) => {
@@ -251,7 +258,6 @@
         cell.className = 'day-cell';
         cell.innerText = day;
 
-        // Отметка 28 Августа
         if (currentMonth === 7 && day === 28) {
           cell.classList.add('anniversary-day');
         }
@@ -293,7 +299,6 @@
     function renderCurrentView() {
       document.getElementById('selectedDateTitle').innerText = `📅 Дата: ${selectedDateKey}`;
       
-      // Баннер 28 Августа
       const isAug28 = selectedDateKey.endsWith('-08-28');
       document.getElementById('anniversaryBanner').style.display = isAug28 ? 'block' : 'none';
 
@@ -314,8 +319,13 @@
           document.getElementById('nyushaRatingBox').style.display = 'none';
         }
 
-        document.getElementById('nyushaWriteText').value = fromNyusha ? fromNyusha.text || '' : '';
-        document.getElementById('nyushaWriteImg').value = fromNyusha ? fromNyusha.img || '' : '';
+        if (fromNyusha && fromNyusha.text) {
+          document.getElementById('nyushaSentPreview').style.display = 'block';
+          document.getElementById('nyushaSentText').innerText = fromNyusha.text;
+        } else {
+          document.getElementById('nyushaSentPreview').style.display = 'none';
+        }
+
         document.getElementById('nyushaStatusInfo').innerText = fromNyusha && fromNyusha.rating ? `Оценка Кроша: ${fromNyusha.rating}/10 🐾` : (fromNyusha ? 'Отправлено! Крош ещё не оценил.' : '');
 
       } else {
@@ -331,8 +341,13 @@
           document.getElementById('kroshRatingBox').style.display = 'none';
         }
 
-        document.getElementById('kroshWriteText').value = fromKrosh ? fromKrosh.text || '' : '';
-        document.getElementById('kroshWriteImg').value = fromKrosh ? fromKrosh.img || '' : '';
+        if (fromKrosh && fromKrosh.text) {
+          document.getElementById('kroshSentPreview').style.display = 'block';
+          document.getElementById('kroshSentText').innerText = fromKrosh.text;
+        } else {
+          document.getElementById('kroshSentPreview').style.display = 'none';
+        }
+
         document.getElementById('kroshStatusInfo').innerText = fromKrosh && fromKrosh.rating ? `Оценка Нюши: ${fromKrosh.rating}/10 🐾` : (fromKrosh ? 'Отправлено! Нюша ещё не оценила.' : '');
       }
     }
@@ -345,7 +360,7 @@
         btn.className = `snout-btn ${i <= rating ? 'active' : ''}`;
         btn.innerText = '🐾';
         btn.onclick = () => {
-          db.ref(`wishes_v2/${selectedDateKey}/${targetKey}/rating`).set(i);
+          db.ref(`wishes_v2/${selectedDateKey}/${targetKey}`).update({ rating: i });
         };
         box.appendChild(btn);
       }
@@ -356,19 +371,50 @@
       const text = document.getElementById('nyushaWriteText').value.trim();
       const img = document.getElementById('nyushaWriteImg').value.trim();
       if (!text) return alert('Напиши текст!');
-      db.ref(`wishes_v2/${selectedDateKey}/from_nyusha`).update({ text, img });
-      alert('Отправлено Крошу! 🐱💖');
+
+      const btn = document.getElementById('nyushaSaveBtn');
+      btn.disabled = true;
+      btn.innerText = 'Сохранение...';
+
+      db.ref(`wishes_v2/${selectedDateKey}/from_nyusha`).update({ text, img })
+        .then(() => {
+          alert('Успешно отправлено Крошу! 🐱💖');
+          document.getElementById('nyushaWriteText').value = '';
+          document.getElementById('nyushaWriteImg').value = '';
+          btn.disabled = false;
+          btn.innerText = 'Отправить Крошу 💖';
+        })
+        .catch((err) => {
+          alert('❌ Ошибка отправки: ' + err.message + '\nПроверьте правила в консоли Firebase!');
+          btn.disabled = false;
+          btn.innerText = 'Отправить Крошу 💖';
+        });
     }
 
     function saveKroshWish() {
       const text = document.getElementById('kroshWriteText').value.trim();
       const img = document.getElementById('kroshWriteImg').value.trim();
       if (!text) return alert('Напиши текст!');
-      db.ref(`wishes_v2/${selectedDateKey}/from_krosh`).update({ text, img });
-      alert('Отправлено Нюше! 🐰💖');
+
+      const btn = document.getElementById('kroshSaveBtn');
+      btn.disabled = true;
+      btn.innerText = 'Сохранение...';
+
+      db.ref(`wishes_v2/${selectedDateKey}/from_krosh`).update({ text, img })
+        .then(() => {
+          alert('Успешно отправлено Нюше! 🐰💖');
+          document.getElementById('kroshWriteText').value = '';
+          document.getElementById('kroshWriteImg').value = '';
+          btn.disabled = false;
+          btn.innerText = 'Отправить Нюше 💖';
+        })
+        .catch((err) => {
+          alert('❌ Ошибка отправки: ' + err.message + '\nПроверьте правила в консоли Firebase!');
+          btn.disabled = false;
+          btn.innerText = 'Отправить Нюше 💖';
+        });
     }
 
-    // ЛОГИКА "ЧЕМ МЫ НЕДОВОЛЬНЫ"
     function addDiscontent() {
       const txt = document.getElementById('honestInput').value.trim();
       if (!txt) return alert('Напиши текст!');
@@ -377,8 +423,9 @@
         text: txt,
         author: author,
         time: new Date().toLocaleDateString()
-      });
-      document.getElementById('honestInput').value = '';
+      }).then(() => {
+        document.getElementById('honestInput').value = '';
+      }).catch(err => alert("Ошибка: " + err.message));
     }
 
     function renderDiscontents(data) {
@@ -406,7 +453,6 @@
       db.ref(`discontents/${id}`).remove();
     }
 
-    // МИНИ-ИГРА ТЕТРИС
     const canvas = document.getElementById('tetrisCanvas');
     const ctx = canvas.getContext('2d');
     const BLOCK = 16;
