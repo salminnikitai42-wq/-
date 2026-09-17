@@ -57,7 +57,6 @@
     .nyusha-text { color: var(--primary); }
     .krosh-text { color: var(--krosh-color); }
     
-    /* Свайп-карусель для сообщений */
     .msg-carousel { position: relative; overflow: hidden; width: 100%; border-radius: 16px; background: white; padding: 14px; touch-action: pan-y; }
     .msg-nav-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 13px; font-weight: 800; color: var(--text-light); }
     .msg-arrow-btn { background: var(--bg); border: none; padding: 4px 10px; border-radius: 10px; font-weight: bold; cursor: pointer; color: var(--text); }
@@ -81,7 +80,6 @@
     .discontent-text { font-size: 14px; line-height: 1.4; }
     .resolve-btn { background: #4CAF50; color: white; border: none; padding: 6px 12px; border-radius: 10px; font-weight: 700; font-size: 12px; align-self: flex-end; cursor: pointer; }
 
-    /* Нежные кнопки для игр */
     .game-canvas { background: #222; border-radius: 16px; margin: 0 auto; display: block; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
     .gentle-controls { display: flex; justify-content: center; gap: 12px; margin-top: 10px; }
     .g-btn { background: #E8DFF5; color: #5E35B1; border: none; width: 56px; height: 56px; border-radius: 20px; font-size: 22px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(103, 58, 183, 0.15); transition: transform 0.1s; }
@@ -148,7 +146,7 @@
           <div class="card-title krosh-text">✍️ Написать пожелание Крошу:</div>
           <textarea id="nyushaWriteText" class="input-field" placeholder="Напиши пожелание Крошу..."></textarea>
           <input type="text" id="nyushaWriteImg" class="input-field" placeholder="Ссылка на фото (необязательно)...">
-          <button class="save-btn save-btn-nyusha" id="nyushaSaveBtn" onclick="saveWish('nyusha')">Отправить Крошу 💖</button>
+          <button class="save-btn save-btn-nyusha" onclick="saveWish('nyusha')">Отправить Крошу 💖</button>
         </div>
       </div>
 
@@ -176,7 +174,7 @@
           <div class="card-title nyusha-text">✍️ Написать пожелание Нюше:</div>
           <textarea id="kroshWriteText" class="input-field" placeholder="Напиши пожелание Нюше..."></textarea>
           <input type="text" id="kroshWriteImg" class="input-field" placeholder="Ссылка на фото (необязательно)...">
-          <button class="save-btn save-btn-krosh" id="kroshSaveBtn" onclick="saveWish('krosh')">Отправить Нюше 💖</button>
+          <button class="save-btn save-btn-krosh" onclick="saveWish('krosh')">Отправить Нюше 💖</button>
         </div>
       </div>
 
@@ -276,11 +274,13 @@
       let nyushaSum = 0, kroshSum = 0;
       Object.keys(wishesData).forEach(date => {
         const day = wishesData[date];
-        if (day.from_krosh && Array.isArray(day.from_krosh)) {
-          day.from_krosh.forEach(m => nyushaSum += (m.rating || 0));
+        if (day.from_krosh) {
+          let list = Array.isArray(day.from_krosh) ? day.from_krosh : Object.values(day.from_krosh);
+          list.forEach(m => nyushaSum += (m.rating || 0));
         }
-        if (day.from_nyusha && Array.isArray(day.from_nyusha)) {
-          day.from_nyusha.forEach(m => kroshSum += (m.rating || 0));
+        if (day.from_nyusha) {
+          let list = Array.isArray(day.from_nyusha) ? day.from_nyusha : Object.values(day.from_nyusha);
+          list.forEach(m => kroshSum += (m.rating || 0));
         }
       });
       ratingsData.nyusha_msg = nyushaSum;
@@ -366,10 +366,12 @@
       const dayData = wishesData[selectedDateKey] || {};
 
       if (currentRole === 'nyusha') {
-        const kroshMsgs = dayData.from_krosh || [];
+        const raw = dayData.from_krosh || [];
+        const kroshMsgs = Array.isArray(raw) ? raw : Object.values(raw);
         renderCarousel('nyusha', kroshMsgs, nyushaMsgIdx, 'from_krosh');
       } else {
-        const nyushaMsgs = dayData.from_nyusha || [];
+        const raw = dayData.from_nyusha || [];
+        const nyushaMsgs = Array.isArray(raw) ? raw : Object.values(raw);
         renderCarousel('krosh', nyushaMsgs, kroshMsgIdx, 'from_nyusha');
       }
     }
@@ -411,16 +413,17 @@
     function nextMsg(senderRole) {
       const dayData = wishesData[selectedDateKey] || {};
       if (senderRole === 'krosh') {
-        const max = (dayData.from_krosh || []).length;
+        const raw = dayData.from_krosh || [];
+        const max = (Array.isArray(raw) ? raw : Object.values(raw)).length;
         if (nyushaMsgIdx < max - 1) nyushaMsgIdx++;
       } else {
-        const max = (dayData.from_nyusha || []).length;
+        const raw = dayData.from_nyusha || [];
+        const max = (Array.isArray(raw) ? raw : Object.values(raw)).length;
         if (kroshMsgIdx < max - 1) kroshMsgIdx++;
       }
       renderCurrentView();
     }
 
-    // Свайпы для карусели
     function setupSwipe(elementId, senderRole) {
       let touchStartX = 0;
       const el = document.getElementById(elementId);
@@ -458,8 +461,12 @@
 
       if (!text) return alert('Напиши текст!');
 
-      const path = `wishes_v2/${selectedDateKey}/${isNyusha ? 'from_nyusha' : 'from_krosh'}`;
-      const currentList = (wishesData[selectedDateKey] && wishesData[selectedDateKey][isNyusha ? 'from_nyusha' : 'from_krosh']) || [];
+      const propName = isNyusha ? 'from_nyusha' : 'from_krosh';
+      const path = `wishes_v2/${selectedDateKey}/${propName}`;
+      
+      const dayData = wishesData[selectedDateKey] || {};
+      const rawList = dayData[propName] || [];
+      const currentList = Array.isArray(rawList) ? [...rawList] : Object.values(rawList);
       
       currentList.push({ text, img, rating: 0 });
 
@@ -508,7 +515,6 @@
       db.ref(`user_scores/${roleKey}`).set(newTotal);
     }
 
-    // ЛОГИКА ИГР (ТЕТРИС И ЗМЕЙКА)
     let activeGame = 'tetris';
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
@@ -548,7 +554,6 @@
       }
     }
 
-    // ТЕТРИС
     const BLOCK = 16, ROWS = 20, COLS = 12;
     let tGrid = [];
     const SHAPES = [[[1,1,1,1]], [[1,1],[1,1]], [[0,1,0],[1,1,1]], [[1,0,0],[1,1,1]], [[0,0,1],[1,1,1]]];
@@ -629,7 +634,6 @@
       if (!tCollide(p.x, p.y, rot)) { p.shape = rot; drawTetris(); }
     }
 
-    // ЗМЕЙКА
     let snake = [], snakeDir = 'RIGHT', food = {};
     function initSnake(speed) {
       snake = [{x: 5, y: 10}, {x: 4, y: 10}];
@@ -674,4 +678,4 @@
     initCalendar();
   </script>
 </body>
-</html>
+  </html>
