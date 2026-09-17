@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Календарь Пожеланий 🐷💖</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+  <style>
+    :root {
+      --primary: #FF6B8B;
+      --primary-light: #FFEBF0;
+      --secondary: #FF8DA1;
+      --bg: #FFF5F7;
+      --card-bg: #FFFFFF;
+      --text: #4A3E3D;
+      --text-light: #8E7C7D;
+      --krosh-color: #4A90E2;
+      --krosh-bg: #EBF3FA;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; }
+    body { background-color: var(--bg); color: var(--text); display: flex; justify-content: center; min-height: 100vh; padding: 12px; }
+    .app-container { width: 100%; max-width: 430px; background: var(--card-bg); border-radius: 32px; box-shadow: 0 12px 30px rgba(255, 107, 139, 0.15); display: flex; flex-direction: column; overflow: hidden; }
+    .header { background: linear-gradient(135deg, #FF8DA1, #FF6B8B); color: white; padding: 20px 16px; text-align: center; border-bottom-left-radius: 24px; border-bottom-right-radius: 24px; }
+    .header.krosh-mode { background: linear-gradient(135deg, #5CA0F2, #357ABD); }
+    .role-switcher { display: inline-flex; background: rgba(255, 255, 255, 0.25); padding: 4px; border-radius: 20px; margin-bottom: 12px; }
+    .role-btn { border: none; background: transparent; color: white; padding: 6px 14px; border-radius: 16px; font-weight: 700; font-size: 13px; cursor: pointer; }
+    .role-btn.active { background: white; color: var(--primary); }
+    .header.krosh-mode .role-btn.active { color: var(--krosh-color); }
+    .character-badge { display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 20px; font-weight: 800; }
+    .character-avatar { font-size: 32px; background: white; border-radius: 50%; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; }
+    .content { padding: 16px; flex: 1; display: flex; flex-direction: column; gap: 16px; }
+    .month-header { font-weight: 800; font-size: 18px; text-align: center; }
+    .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; text-align: center; }
+    .weekday { font-size: 12px; font-weight: 700; color: var(--text-light); }
+    .day-cell { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; border-radius: 18px; font-weight: 700; cursor: pointer; background: var(--bg); position: relative; }
+    .day-cell.today { border: 2px solid var(--primary); color: var(--primary); }
+    .day-cell.has-wish::after { content: ''; width: 6px; height: 6px; background: var(--primary); border-radius: 50%; position: absolute; bottom: 4px; }
+    .day-cell.selected { background: var(--primary); color: white; }
+    .wish-card { background: var(--primary-light); border-radius: 24px; padding: 20px; border: 2px dashed var(--secondary); display: flex; flex-direction: column; gap: 14px; }
+    .wish-title { font-size: 16px; font-weight: 800; color: var(--primary); }
+    .wish-text { font-size: 15px; line-height: 1.5; white-space: pre-line; }
+    .wish-img { width: 100%; max-height: 220px; object-fit: cover; border-radius: 16px; }
+    .rating-box { background: white; padding: 12px; border-radius: 18px; text-align: center; }
+    .snout-btn { background: none; border: none; font-size: 18px; cursor: pointer; opacity: 0.3; }
+    .snout-btn.active { opacity: 1; transform: scale(1.2); }
+    .editor-card { background: var(--krosh-bg); border-radius: 24px; padding: 18px; display: flex; flex-direction: column; gap: 12px; }
+    .input-field { width: 100%; padding: 12px; border-radius: 14px; border: 1px solid #C4D9ED; outline: none; }
+    textarea.input-field { min-height: 90px; }
+    .save-btn { background: var(--krosh-color); color: white; border: none; padding: 14px; border-radius: 16px; font-weight: 800; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+    <div class="header" id="header">
+      <div class="role-switcher">
+        <button class="role-btn active" id="nyushaRoleBtn" onclick="switchRole('nyusha')">🐷 Анна</button>
+        <button class="role-btn" id="kroshRoleBtn" onclick="switchRole('krosh')">🐰 Никита</button>
+      </div>
+      <div class="character-badge">
+        <div class="character-avatar" id="avatarEmoji">🐷</div>
+        <span id="headerGreeting">Привет, Анна!</span>
+      </div>
+    </div>
+    <div class="content">
+      <div class="month-header" id="monthYearText">Календарь</div>
+      <div class="calendar-grid" id="calendarGrid"></div>
+      
+      <!-- Режим Анны (Нюши) -->
+      <div id="nyushaView" class="wish-card">
+        <div class="wish-title">💌 Пожелание от Никиты</div>
+        <div class="wish-text" id="wishTextDisplay">Выбери день на календаре!</div>
+        <img id="wishImageDisplay" class="wish-img" src="" style="display: none;">
+        <div class="rating-box" id="ratingBox" style="display: none;">
+          <div style="font-size:12px; font-weight:700; margin-bottom:6px;">Оцени пожелание Никиты:</div>
+          <div id="snoutRating"></div>
+          <div id="ratingScoreText" style="font-weight:800; color:var(--primary); margin-top:6px;">0/10 пятачков 🐽</div>
+        </div>
+      </div>
+
+      <!-- Режим Никиты (Кроша) -->
+      <div id="kroshView" class="editor-card" style="display: none;">
+        <div style="font-weight: 800; color: var(--krosh-color);">✍️ Пожелание на <span id="selectedDateText">сегодня</span>:</div>
+        <textarea id="wishTextInput" class="input-field" placeholder="Напиши пожелание или комплимент..."></textarea>
+        <input type="text" id="wishImageInput" class="input-field" placeholder="Ссылка на фото (необязательно)...">
+        <button class="save-btn" onclick="saveWish()">Отправить Анне 💖</button>
+        <div id="savedRatingInfo" style="font-size: 13px; text-align: center; margin-top: 4px;"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyCWFh2iJw3uhhXZQ8OUPog0s6q-oRq_bUg",
+      authDomain: "nikita-and-anna.firebaseapp.com",
+      databaseURL: "https://nikita-and-anna-default-rtdb.firebaseio.com",
+      projectId: "nikita-and-anna",
+      storageBucket: "nikita-and-anna.firebasestorage.app",
+      messagingSenderId: "738955454624",
+      appId: "1:738955454624:web:dd3bcf7c08fc05c62dc1c5"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    let currentRole = 'nyusha';
+    let selectedDateKey = getTodayKey();
+    let wishesData = {};
+
+    function getTodayKey() {
+      const d = new Date();
+      return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    }
+
+    db.ref('wishes').on('value', (snapshot) => {
+      wishesData = snapshot.val() || {};
+      initCalendar();
+    });
+
+    function initCalendar() {
+      const grid = document.getElementById('calendarGrid');
+      grid.innerHTML = '<div class="weekday">Пн</div><div class="weekday">Вт</div><div class="weekday">Ср</div><div class="weekday">Чт</div><div class="weekday">Пт</div><div class="weekday">Сб</div><div class="weekday">Вс</div>';
+      
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = now.getMonth();
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+      const firstDay = (new Date(year, month, 1).getDay() + 6) % 7;
+
+      for (let i = 0; i < firstDay; i++) grid.appendChild(document.createElement('div'));
+
+      for (let day = 1; day <= daysInMonth; day++) {
+        const dateKey = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+        const cell = document.createElement('div');
+        cell.className = 'day-cell';
+        cell.innerText = day;
+
+        if (dateKey === getTodayKey()) cell.classList.add('today');
+        if (wishesData[dateKey]) cell.classList.add('has-wish');
+        if (dateKey === selectedDateKey) cell.classList.add('selected');
+
+        cell.onclick = () => { selectedDateKey = dateKey; initCalendar(); };
+        grid.appendChild(cell);
+      }
+      renderCurrentView();
+    }
+
+    function switchRole(role) {
+      currentRole = role;
+      document.getElementById('header').className = `header ${role === 'krosh' ? 'krosh-mode' : ''}`;
+      document.getElementById('nyushaRoleBtn').className = `role-btn ${role === 'nyusha' ? 'active' : ''}`;
+      document.getElementById('kroshRoleBtn').className = `role-btn ${role === 'krosh' ? 'active' : ''}`;
+      document.getElementById('avatarEmoji').innerText = role === 'nyusha' ? '🐷' : '🐰';
+      document.getElementById('headerGreeting').innerText = role === 'nyusha' ? 'Привет, Анна!' : 'Кабинет Никиты';
+      document.getElementById('nyushaView').style.display = role === 'nyusha' ? 'flex' : 'none';
+      document.getElementById('kroshView').style.display = role === 'krosh' ? 'flex' : 'none';
+      renderCurrentView();
+    }
+
+    function renderCurrentView() {
+      const data = wishesData[selectedDateKey];
+      if (currentRole === 'nyusha') {
+        if (data && data.text) {
+          document.getElementById('wishTextDisplay').innerText = data.text;
+          const img = document.getElementById('wishImageDisplay');
+          if (data.img) { img.src = data.img; img.style.display = 'block'; } else { img.style.display = 'none'; }
+          document.getElementById('ratingBox').style.display = 'block';
+          renderSnouts(data.rating || 0);
+        } else {
+          document.getElementById('wishTextDisplay').innerText = "На этот день Никита ещё ничего не написал... 🐰💤";
+          document.getElementById('wishImageDisplay').style.display = 'none';
+          document.getElementById('ratingBox').style.display = 'none';
+        }
+      } else {
+        document.getElementById('selectedDateText').innerText = selectedDateKey;
+        document.getElementById('wishTextInput').value = data ? data.text || '' : '';
+        document.getElementById('wishImageInput').value = data ? data.img || '' : '';
+        document.getElementById('savedRatingInfo').innerText = data && data.rating ? `Оценка Анны: ${data.rating}/10 пятачков 🐽` : 'Ещё не оценено.';
+      }
+    }
+
+    function renderSnouts(rating) {
+      const box = document.getElementById('snoutRating');
+      box.innerHTML = '';
+      for (let i = 1; i <= 10; i++) {
+        const btn = document.createElement('button');
+        btn.className = `snout-btn ${i <= rating ? 'active' : ''}`;
+        btn.innerText = '🐽';
+        btn.onclick = () => {
+          db.ref(`wishes/${selectedDateKey}/rating`).set(i);
+        };
+        box.appendChild(btn);
+      }
+      document.getElementById('ratingScoreText').innerText = `${rating}/10 пятачков 🐽`;
+    }
+
+    function saveWish() {
+      const text = document.getElementById('wishTextInput').value.trim();
+      const img = document.getElementById('wishImageInput').value.trim();
+      if (!text) return alert('Напиши текст!');
+      db.ref(`wishes/${selectedDateKey}`).update({ text, img });
+      alert('Отправлено Анне! 💖');
+    }
+
+    initCalendar();
+  </script>
+</body>
+</html>
