@@ -1,267 +1,196 @@
 
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
-<meta name="theme-color" content="#080b18">
-<title>CHAIN REACTOR</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#080c20">
+<title>NEON BLOCKS: PIPI</title>
 <style>
-:root{--bg:#080b18;--panel:#121a30;--line:#283451;--text:#edf4ff;--muted:#8996b5;--c:#54e8ff;--p:#ff59c7;--gold:#ffd36b}
+:root{
+ --bg:#080c20;--panel:#121a38;--line:#293968;
+ --cyan:#45dcff;--pink:#ff65c7;--purple:#a78bfa;
+ --gold:#ffd36b;--text:#f5f7ff;--muted:#a0acd0
+}
 *{box-sizing:border-box}
-body{margin:0;padding:16px 12px 30px;background:radial-gradient(ellipse at top,#202957,#080b18 65%);color:var(--text);font:14px system-ui,-apple-system,"Segoe UI",sans-serif}
-.app{max-width:620px;margin:auto}
-header,.row{display:flex;align-items:center;justify-content:space-between;gap:10px}
-header{margin:5px 0 18px}
-.brand{display:flex;align-items:center;gap:10px}
-.logo,.avatar{display:grid;place-items:center;background:linear-gradient(135deg,var(--c),#a58aff,var(--p));color:#080b18;font-weight:900}
-.logo{width:40px;height:40px;border-radius:14px;font-size:24px}
-h1{font-size:14px;letter-spacing:2px;margin:0}
-small,.muted{color:var(--muted);font-size:11px}
-.panel{padding:16px;margin-bottom:12px;border-radius:22px;background:linear-gradient(145deg,#161e38,#0e1428);border:1px solid #ffffff16}
-h2{font-size:17px;margin:0}
+body{margin:0;background:radial-gradient(ellipse at top,#20285b,var(--bg) 65%);
+ color:var(--text);font-family:system-ui,-apple-system,sans-serif;min-height:100vh}
 button,input{font:inherit}
 button{color:inherit;cursor:pointer}
-.btn{padding:11px;border:1px solid var(--line);background:#ffffff08;border-radius:12px;font-size:11px;font-weight:800}
-.primary{background:linear-gradient(110deg,var(--c),#9baaff);color:#08101c;border:0}
-.hud,.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
-.stats{grid-template-columns:repeat(2,1fr);margin:0}
-.stat{padding:11px;border-radius:14px;background:#ffffff05;border:1px solid var(--line);min-width:0}
-.stat label{display:block;font-size:10px;color:var(--muted);margin-bottom:6px;text-transform:uppercase}
-.stat strong{font-size:20px;font-variant-numeric:tabular-nums}
-.cyan{color:var(--c)}.pink{color:var(--p)}.gold{color:var(--gold)}
-.board{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:5px;padding:7px;border-radius:17px;background:#080e20;border:1px solid #54e8ff20}
-.cell{aspect-ratio:1;border-radius:9px;background:#111a30;border:1px solid #ffffff0c;display:grid;place-items:center;padding:0;min-width:0}
-.cell:active{transform:scale(.91)}
-.cell:disabled{cursor:default}
-.orb{width:63%;height:63%;border-radius:50%;background:radial-gradient(circle at 30% 25%,white,var(--orb) 32%,var(--alt));box-shadow:0 0 12px var(--orb),0 0 22px var(--orb);animation:pulse 2s infinite}
-.charged .orb{width:78%;height:78%;box-shadow:0 0 20px var(--orb)}
-.empty:after{content:"";width:4px;height:4px;border-radius:50%;background:#ffffff12}
-.combo{text-align:center;min-height:25px;padding-top:10px;color:var(--gold);font-weight:900;letter-spacing:1px;font-size:12px}
-.controls{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
-.nav{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:13px 0}
-.nav button{background:#ffffff05;border:1px solid transparent;border-radius:14px;padding:10px 3px;color:var(--muted);font-size:10px}
-.nav button span{display:block;font-size:19px;margin-bottom:4px}
-.nav button.active{color:var(--c);border-color:#54e8ff44;background:#54e8ff10}
-.view{display:none}.view.active{display:block}
-.section{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:13px}
-.wallet{padding:12px;border:1px solid #ffd36b25;border-radius:14px;margin-bottom:12px;background:#ffd36b0b}
-.wallet strong{font-size:20px;color:var(--gold)}
-.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
-.item{padding:12px;border:1px solid var(--line);border-radius:16px;background:#ffffff04;min-width:0}
-.item.selected{border-color:var(--c);background:#54e8ff0c}
-.swatch{height:55px;border-radius:12px;background:#0b1224;display:grid;place-items:center;margin-bottom:10px}
-.swatch .orb{width:27px;height:27px}
-.item h3{font-size:12px;margin:0 0 5px}
-.item p{font-size:10px;color:var(--muted);line-height:1.5;min-height:30px;margin:0 0 10px}
-.item button{width:100%;padding:9px 4px;font-size:10px}
-.upgrade{display:flex;align-items:center;gap:10px;padding:13px 0;border-bottom:1px solid var(--line)}
-.upgrade:last-child{border:0}
-.uicon{padding:12px;border-radius:12px;background:#54e8ff12;font-size:19px}
-.uinfo{flex:1}.uinfo b{font-size:12px}.uinfo small{display:block;margin-top:5px;line-height:1.5}
-.uside{text-align:right;min-width:85px}.uside button{margin-top:6px}
-.avatar{width:40px;height:40px;border-radius:13px}
-.hero{text-align:center;padding:12px 0 18px}
-.bigavatar{width:70px;height:70px;margin:0 auto 12px;border-radius:24px;display:grid;place-items:center;background:linear-gradient(135deg,var(--c),#a58aff,var(--p));color:#08101c;font-size:30px;font-weight:900}
-.idbox{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:11px;margin-top:14px;border:1px dashed #91a5d744;border-radius:12px}
-.idbox code{color:var(--c);font-size:11px;overflow-wrap:anywhere}
-.field{width:100%;padding:12px;background:#090e1e;border:1px solid var(--line);border-radius:12px;color:var(--text);margin:8px 0}
-.notice{padding:11px;border-radius:12px;background:#ffffff06;color:var(--muted);font-size:10px;line-height:1.6;margin-top:10px}
-.friend{display:flex;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid var(--line)}
-.friend div:nth-child(2){flex:1;min-width:0}.friend small{display:block;overflow-wrap:anywhere;margin-top:4px}
-.toast{position:fixed;bottom:18px;left:50%;transform:translate(-50%,20px);opacity:0;transition:.2s;background:#202b49;border:1px solid #54e8ff44;border-radius:13px;padding:12px 16px;font-size:12px;z-index:5;max-width:90%;pointer-events:none}
-.toast.show{opacity:1;transform:translate(-50%,0)}
-@keyframes pulse{50%{transform:scale(1.09);filter:brightness(1.3)}}
-@media(min-width:560px){body{padding:24px}.panel{padding:20px}.board{gap:7px}}
-@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.app{max-width:540px;margin:auto;padding-bottom:90px}
+header{position:sticky;top:0;z-index:5;background:#090e24ee;backdrop-filter:blur(15px);
+ padding:14px 16px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line)}
+.logo{font-weight:1000;letter-spacing:1px}.logo span{display:block;color:var(--pink);font-size:11px;letter-spacing:4px}
+.wallet{background:#172044;padding:8px 11px;border:1px solid var(--line);border-radius:20px;font-weight:800}
+main{padding:16px;animation:fade .2s}
+@keyframes fade{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+h1{font-size:27px;margin:8px 0}h2{font-size:20px;margin:8px 0}
+p{line-height:1.5}.muted,.tiny{color:var(--muted)}.tiny{font-size:12px;line-height:1.5}
+.panel,.tile{background:linear-gradient(145deg,#151f43,#10162f);border:1px solid var(--line);border-radius:19px;padding:14px}
+.hero{background:radial-gradient(circle at 80% 20%,#55358e,#19214c 55%,#11172f);border:1px solid #514b9b;border-radius:23px;padding:18px;overflow:hidden}
+.row{display:flex;align-items:center;gap:12px}.between{justify-content:space-between}.grow{flex:1;min-width:0}
+.btn{border:0;border-radius:13px;padding:12px 15px;font-weight:850;background:linear-gradient(110deg,#874fff,#ef58c6);box-shadow:0 5px 18px #9a4fff33}
+.btn:active{transform:scale(.98)}.secondary{background:#172143;border:1px solid #344779;box-shadow:none}
+.cyan{background:linear-gradient(110deg,#15bde6,#6575ff)}.gold{background:linear-gradient(110deg,#f7b83f,#ffe08a);color:#291a40}
+.full{width:100%}.hidden{display:none!important}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.tile{text-align:left;min-width:0}.tile h3{font-size:14px;margin:6px 0}.emoji{font-size:30px}
+.section{display:flex;justify-content:space-between;align-items:center;margin:20px 0 10px}
+.section h2{font-size:16px}.nav{position:fixed;z-index:10;bottom:0;left:50%;transform:translateX(-50%);width:min(540px,100%);
+ padding:8px 4px calc(8px + env(safe-area-inset-bottom));display:grid;grid-template-columns:repeat(5,1fr);
+ background:#090e24f5;border-top:1px solid var(--line);backdrop-filter:blur(15px)}
+.nav button{background:none;border:0;color:#98a4ce;font-size:10px;font-weight:800;padding:6px 1px;border-radius:10px}
+.nav button span{display:block;font-size:20px;margin-bottom:3px}.nav button.active{background:#2a1744;color:var(--pink)}
+.petroom{min-height:220px;border-radius:20px;border:1px solid #514b9b;
+ background:radial-gradient(ellipse at bottom,#5b3c83,#222754 65%,#131933);
+ display:grid;place-items:center;position:relative;overflow:hidden}
+.petroom:after{content:"";position:absolute;bottom:0;height:38px;width:100%;background:repeating-linear-gradient(90deg,#ff65c722 0 20px,#45dcff22 20px 40px)}
+.cat{width:140px;height:140px;image-rendering:pixelated;filter:drop-shadow(0 5px 14px #45dcff66);position:relative;z-index:1}
+.bubble{position:absolute;right:10px;top:12px;background:#fff;color:#25224d;border-radius:12px;padding:8px;font-size:12px;z-index:2}
+.bar{height:8px;background:#273256;border-radius:20px;overflow:hidden}.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--cyan),var(--pink));border-radius:20px}
+.stat{display:grid;grid-template-columns:75px 1fr 35px;gap:8px;align-items:center;margin:12px 0;font-size:12px}
+.board{display:grid;grid-template-columns:repeat(8,1fr);gap:4px;margin:14px auto;max-width:440px}
+.cell{aspect-ratio:1;border-radius:5px;background:#121b39;border:1px solid #26345f;min-width:0}
+.cell.f{background:var(--c);border-color:#ffffff66;box-shadow:0 0 8px var(--c)}
+.pieces{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.piece{min-height:75px;border-radius:12px;border:1px solid var(--line);background:#121a37;display:grid;place-items:center}
+.piece.sel{border-color:var(--pink);box-shadow:0 0 12px #ff65c744}
+.shape{display:grid;gap:3px}.sq{width:14px;height:14px;border-radius:3px;background:var(--c);box-shadow:0 0 6px var(--c)}
+.form{width:100%;background:#080f29;border:1px solid #344779;color:white;padding:12px;border-radius:12px}
+.wheel{width:220px;height:220px;border-radius:50%;border:6px solid #a4b5ff;margin:15px auto;
+ background:conic-gradient(#566bdb 0 40%,#2ebedc 40% 65%,#a36aff 65% 80%,#ed65c1 80% 90%,#e9b950 90% 97%,#fff0a8 97%);
+ box-shadow:0 0 25px #8b5cfaaa;transition:transform 3s cubic-bezier(.13,.75,.16,1);position:relative}
+.wheel:after{content:"P";position:absolute;inset:39%;display:grid;place-items:center;border-radius:50%;background:#111a3c;border:3px solid white;font-weight:1000}
+.pointer{width:0;height:0;border-left:13px solid transparent;border-right:13px solid transparent;border-top:27px solid #fff0a0;margin:auto}
+.modalbg{position:fixed;inset:0;background:#000b;z-index:20;display:grid;place-items:center;padding:20px}
+.modal{width:min(400px,100%);background:#121a38;border:1px solid #465998;border-radius:20px;padding:20px}
+.toast{position:fixed;bottom:95px;left:50%;transform:translateX(-50%);z-index:30;background:#f5f6ff;color:#151a34;padding:12px 17px;border-radius:12px;font-weight:800;font-size:13px;max-width:90%;white-space:nowrap}
 </style>
 </head>
 <body>
-<main class="app">
-<header>
- <div class="brand"><div class="logo">ϟ</div><div><h1>CHAIN REACTOR</h1><small>ENERGY · COMBO · REPEAT</small></div></div>
- <button class="btn" onclick="view('profile')"><span id="miniName">Игрок</span> ↗</button>
+<div class="app">
+<header id="header" class="hidden">
+ <div class="logo">NEON BLOCKS <span>✦ PIPI ✦</span></div>
+ <div class="wallet">🪙 <b id="coins">100</b></div>
 </header>
-
-<section id="gameView" class="view active">
- <div class="hud">
-  <div class="stat"><label>Очки</label><strong id="score" class="cyan">0</strong></div>
-  <div class="stat"><label>Комбо</label><strong id="combo" class="pink">x1</strong></div>
-  <div class="stat"><label>Кристаллы</label><strong id="crystals" class="gold">0</strong></div>
- </div>
- <div class="panel">
-  <div class="section"><div><h2>Поле реактора</h2><small id="gameSub">Запусти цепную реакцию</small></div><span class="cyan" id="level">LVL 1</span></div>
-  <div class="board" id="board"></div>
-  <div class="combo" id="message">ГОТОВ К ЗАПУСКУ</div>
-  <p class="muted">Нажимай на сферу. Импульс заряжает соседние клетки по вертикали и горизонтали. Заряженные сферы взрываются и запускают цепную реакцию.</p>
-  <div class="controls"><button class="btn primary" onclick="newRun()">↻ НОВЫЙ ЗАБЕГ</button><button class="btn" onclick="help()">ⓘ КАК ИГРАТЬ</button></div>
- </div>
- <div class="panel"><div class="section"><h2>Твой прогресс</h2><small>На устройстве</small></div><div class="stats">
-  <div class="stat"><label>Рекорд</label><strong id="best">0</strong></div>
-  <div class="stat"><label>Забегов</label><strong id="runs">0</strong></div>
-  <div class="stat"><label>Цепных реакций</label><strong id="chains">0</strong></div>
-  <div class="stat"><label>Сфер активировано</label><strong id="orbs">0</strong></div>
- </div></div>
-</section>
-
-<section id="skinsView" class="view"><div class="panel">
- <div class="section"><h2>Скины реактора</h2><small>Бесплатно за игру</small></div>
- <div class="wallet">Баланс<br><strong id="skinWallet">0 ◈</strong></div><div id="skinGrid" class="grid"></div>
-</div></section>
-
-<section id="upgradesView" class="view"><div class="panel">
- <div class="section"><h2>Лаборатория</h2><small>Постоянные улучшения</small></div>
- <div class="wallet">Кристаллы<br><strong id="upWallet">0 ◈</strong></div><div id="upgradeList"></div>
- <div class="notice">Улучшения остаются с тобой. Реклама и покупки за реальные деньги не используются.</div>
-</div></section>
-
-<section id="friendsView" class="view"><div class="panel">
- <div class="section"><h2>Друзья</h2><small id="friendCount">0 друзей</small></div>
- <p class="muted">Добавление по ID сохраняется локально. Онлайн-поиск появится после подключения сервера.</p>
- <input id="friendId" class="field" placeholder="ID друга, например CR-A1B2C3" maxlength="32">
- <button class="btn primary" style="width:100%" onclick="addFriend()">＋ ДОБАВИТЬ ПО ID</button>
- <div id="friendList"></div>
-</div></section>
-
-<section id="profileView" class="view"><div class="panel">
- <div class="hero"><div id="bigAvatar" class="bigavatar">И</div><h2 id="profileName">Игрок</h2><p class="muted" id="profileLevel">Уровень 1</p>
- <div class="idbox"><code id="playerId"></code><button class="btn" onclick="copyId()">КОПИРОВАТЬ ID</button></div></div>
- <label class="muted">Имя игрока</label><input id="nameInput" class="field" maxlength="18" placeholder="Твой никнейм">
- <button class="btn primary" style="width:100%" onclick="saveName()">СОХРАНИТЬ ИМЯ</button>
- <div class="notice"><b>Аккаунт гостя</b><br>Прогресс хранится в браузере этого устройства. Google-вход и синхронизация между телефонами требуют Firebase Authentication и базы данных.</div>
- <button class="btn" style="width:100%;margin-top:10px" onclick="googleInfo()">◎ GOOGLE-ВХОД — ПОЗЖЕ</button>
- <div class="section" style="margin-top:20px"><h2>Статистика</h2><small>За всё время</small></div>
- <div class="stats">
-  <div class="stat"><label>Рекорд</label><strong id="pBest">0</strong></div><div class="stat"><label>Всего очков</label><strong id="pTotal">0</strong></div>
-  <div class="stat"><label>Забегов</label><strong id="pRuns">0</strong></div><div class="stat"><label>Лучшее комбо</label><strong id="pCombo">x1</strong></div>
-  <div class="stat"><label>Сфер активировано</label><strong id="pOrbs">0</strong></div><div class="stat"><label>Скинов открыто</label><strong id="pSkins">1</strong></div>
- </div>
- <button class="btn" style="width:100%;margin-top:14px" onclick="resetProgress()">СБРОСИТЬ ПРОГРЕСС</button>
-</div></section>
-
-<nav class="nav">
- <button class="active" data-view="game" onclick="view('game')"><span>⌘</span>Игра</button>
- <button data-view="skins" onclick="view('skins')"><span>◉</span>Скины</button>
- <button data-view="upgrades" onclick="view('upgrades')"><span>⚡</span>Улучшения</button>
- <button data-view="friends" onclick="view('friends')"><span>♧</span>Друзья</button>
+<main id="screen"></main>
+<nav id="nav" class="nav hidden">
+ <button data-page="game"><span>🎮</span>Игра</button>
+ <button data-page="pet"><span>🐾</span>Питомец</button>
+ <button data-page="levels"><span>🗺️</span>Уровни</button>
+ <button data-page="skins"><span>👕</span>Скины</button>
+ <button data-page="account"><span>👤</span>Аккаунт</button>
 </nav>
-<div class="muted" style="text-align:center;letter-spacing:2px">CHAIN REACTOR · BUILD 0.1</div>
-</main>
-<div class="toast" id="toast"></div>
-
+</div>
+<div id="toast" class="toast hidden"></div><div id="modal"></div>
 <script>
-const KEY='chain-reactor-v1';
-const SKINS=[
- ['cyan','Neon Pulse','Холодный голубой неон.',0,'#54e8ff','#9b7cff'],
- ['rose','Pink Nova','Розовое сияние.',120,'#ff59c7','#ff9bdc'],
- ['plasma','Plasma Core','Фиолетовая плазма.',250,'#a78bfa','#54e8ff'],
- ['solar','Solar Flare','Золотая энергия.',400,'#ffd36b','#ff8a5c'],
- ['toxic','Toxic Wave','Зелёная волна.',600,'#6effbd','#54e8ff'],
- ['void','Dark Matter','Тёмная материя.',900,'#e4e7ff','#7c3aed']
-];
-const UPGRADES=[
- ['charge','ϟ','Усиленный импульс','Больше очков за сферы.',100,5],
- ['magnet','✦','Кристальный магнит','Больше кристаллов за цепь.',150,5],
- ['stability','◈','Стабильное ядро','Больше новых сфер после хода.',200,3]
-];
-const $=id=>document.getElementById(id);
-const makeId=()=>'CR-'+Math.random().toString(36).slice(2,8).toUpperCase();
-function fresh(){return {id:makeId(),name:'Игрок',crystals:0,best:0,runs:0,total:0,chains:0,orbs:0,bestCombo:1,skin:'cyan',owned:['cyan'],up:{charge:0,magnet:0,stability:0},friends:[]}}
-let d;
-try{d={...fresh(),...JSON.parse(localStorage.getItem(KEY)||'{}')}}catch(e){d=fresh()}
-if(!d.id)d.id=makeId();if(!d.owned?.length)d.owned=['cyan'];if(!d.up)d.up={};if(!d.friends)d.friends=[];
-let board=[],score=0,run=false,busy=false,chainNow=1,toastTimer;
-function level(){return Math.max(1,Math.floor(Math.sqrt(d.total/500))+1)}
-function skin(){return SKINS.find(s=>s[0]===d.skin)||SKINS[0]}
-function save(){try{localStorage.setItem(KEY,JSON.stringify(d))}catch(e){}renderAll()}
-function fmt(n){return Math.floor(n||0).toLocaleString('ru-RU')}
-function view(v){document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));$(v+'View').classList.add('active');document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x.dataset.view===v));window.scrollTo({top:0,behavior:'smooth'})}
-function toast(s){$('toast').textContent=s;$('toast').classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').classList.remove('show'),2300)}
-function help(){alert('Нажми на сферу. Она передаст импульс соседям. Когда сфера получит два импульса, она взорвётся и запустит цепь. За большие цепочки ты получишь больше очков и кристаллов.')}
-function googleInfo(){alert('Google-вход появится после подключения Firebase Authentication. Тогда можно будет входить безопасно и переносить прогресс между устройствами.')}
-function renderAll(){
- const l=level();
- $('miniName').textContent=d.name;$('profileName').textContent=d.name;$('profileLevel').textContent='Уровень '+l;$('level').textContent='LVL '+l;
- $('bigAvatar').textContent=d.name.slice(0,1).toUpperCase();$('playerId').textContent=d.id;$('nameInput').value=d.name;
- [['best',d.best],['runs',d.runs],['chains',d.chains],['orbs',d.orbs],['pBest',d.best],['pTotal',d.total],['pRuns',d.runs],['pCombo','x'+d.bestCombo],['pOrbs',d.orbs],['pSkins',d.owned.length],['crystals',d.crystals],['skinWallet',fmt(d.crystals)+' ◈'],['upWallet',fmt(d.crystals)+' ◈']].forEach(([id,v])=>$(id).textContent=typeof v==='number'?fmt(v):v);
- renderSkins();renderUpgrades();renderFriends()
+const $=s=>document.querySelector(s);
+const fresh=()=>({
+ name:"ПипиДруг",id:"PIPI-"+Math.floor(100000+Math.random()*900000),
+ coins:100,record:0,total:0,games:0,level:1,xp:0,unlocked:1,completed:[],
+ daily:"",streak:0,lastWheel:"",energy:0,
+ pet:{hunger:70,happy:80,food:0},items:["classic"],inventory:[],
+ friends:[]
+});
+let s;
+try{s={...fresh(),...JSON.parse(localStorage.getItem("pipiSave")||"{}")};s.pet={...fresh().pet,...s.pet}}
+catch(e){s=fresh()}
+function save(){localStorage.setItem("pipiSave",JSON.stringify(s));$("#coins").textContent=s.coins}
+function toast(t){let e=$("#toast");e.textContent=t;e.classList.remove("hidden");clearTimeout(window.tt);window.tt=setTimeout(()=>e.classList.add("hidden"),2200)}
+function cat(){return `<svg class="cat" viewBox="0 0 16 16" shape-rendering="crispEdges" aria-label="Пипи">
+<path fill="#b5efff" d="M1 5h2V2h3v2h5V2h3v3h1v7h-2v2H3v-2H1z"/>
+<path fill="#ff8bd4" d="M3 3h2v2H3zm7 0h2v2h-2z"/>
+<path fill="#3154a7" d="M3 7h3v3H3zm7 0h3v3h-3z"/>
+<path fill="#fff" d="M4 7h1v1H4zm7 0h1v1h-1z"/>
+<path fill="#ff76c8" d="M7 10h2v1H7zm-1 2h1v1H6zm3 0h1v1H9z"/>
+<path fill="#fff" d="M1 7h1v2H1zm13 0h1v2h-1z"/>
+</svg>`}
+let page="splash",board=Array(64).fill(""),pieces=[],selected=-1,points=0,levelMode=false;
+const shapes=[[[1,1],[1,1]],[[1],[1],[1],[1]],[[1,1,1]],[[1,1],[1,0]],[[1,1,1],[0,1,0]],[[1,0],[1,0],[1,1]],[[1,1,0],[0,1,1]],[[1]],[[1,1],[1,1],[1,1]]];
+const colors=["#45dcff","#ff65c7","#a78bfa","#7cf2bd","#ffd36b"];
+function go(p){page=p;render();window.scrollTo({top:0,behavior:"smooth"})}
+$("#nav").onclick=e=>{let b=e.target.closest("[data-page]");if(b)go(b.dataset.page)};
+function render(){
+ $("#coins").textContent=s.coins;
+ $("#header").classList.toggle("hidden",["splash","login"].includes(page));
+ $("#nav").classList.toggle("hidden",["splash","login"].includes(page));
+ document.querySelectorAll(".nav button").forEach(b=>b.classList.toggle("active",b.dataset.page===page));
+ let m=$("#screen");
+ if(page==="splash"){m.innerHTML=`<div style="min-height:78vh;display:grid;align-content:center;text-align:center;gap:18px">
+ <div style="font-weight:1000;font-size:30px;text-shadow:0 0 20px #45dcff">NEON BLOCKS<br><span style="color:var(--pink)">✦ PIPI ✦</span></div>
+ ${cat()}<p class="muted">Собирай комбинации. Находи сокровища.<br>Заботься о Пипи.</p><button class="btn" onclick="go('login')">Начать приключение ✨</button></div>`;return}
+ if(page==="login"){m.innerHTML=`<div style="min-height:75vh;display:grid;align-content:center;text-align:center;gap:13px">${cat()}<h1>Добро пожаловать!</h1><p class="muted">Твоё приключение начинается здесь.</p><button class="btn" onclick="toast('Google авторизация ещё не подключена')">🌈 Продолжить с Google</button><button class="btn secondary" onclick="toast('Яндекс ID ещё не подключён')">🟡 Продолжить с Яндекс ID</button><button class="btn cyan" onclick="go('home')">Играть как гость</button><p class="tiny">Гостевой прогресс сохраняется на этом устройстве.</p></div>`;return}
+ if(page==="home"){m.innerHTML=`<div class="hero"><div class="row"><div class="grow"><div class="tiny">ТВОЁ ПРИКЛЮЧЕНИЕ</div><h1>Привет, ${esc(s.name)}!</h1><p class="muted">Пипи уже ждёт тебя.</p><button class="btn" onclick="newGame()">Играть →</button></div>${cat()}</div><p>⭐ Уровень ${s.level}　🏆 Рекорд ${s.record}</p></div>
+ <div class="section"><h2>Быстрый доступ</h2></div><div class="grid2">
+ <button class="tile" onclick="go('pet')"><div class="emoji">🐾</div><h3>Мой Пипи</h3><div class="tiny">Корм, игрушки, одежда</div></button>
+ <button class="tile" onclick="go('levels')"><div class="emoji">🗺️</div><h3>Уровни</h3><div class="tiny">Открыто: ${s.unlocked}</div></button>
+ <button class="tile" onclick="go('shop')"><div class="emoji">🎡</div><h3>Магазин</h3><div class="tiny">Колесо удачи</div></button>
+ <button class="tile" onclick="daily()"><div class="emoji">🎁</div><h3>Ежедневный приз</h3><div class="tiny">${s.daily===today()?"Уже получен":"Забрать монеты"}</div></button></div>
+ <div class="section"><h2>Прогресс</h2></div><div class="panel"><div class="row between"><span class="muted">Опыт до уровня ${s.level+1}</span><b>${s.xp%100}/100</b></div><div class="bar"><i style="width:${s.xp%100}%"></i></div></div>`;return}
+ if(page==="game"){m.innerHTML=`<div class="row between"><div><div class="tiny">КЛАССИЧЕСКИЙ РЕЖИМ</div><h1>Неоновые блоки</h1></div><button class="btn secondary" onclick="newGame()">↻</button></div>
+ <div class="grid2"><div class="panel"><div class="tiny">ОЧКИ</div><h2>${points}</h2></div><div class="panel"><div class="tiny">РЕКОРД</div><h2>${Math.max(s.record,points)}</h2></div></div>
+ <div id="board" class="board"></div><b>Выбери фигуру</b><div id="pieces" class="pieces"></div>
+ <div class="panel" style="margin-top:14px"><div class="row"><div class="grow"><b>⚡ Импульс реактора</b><div class="tiny">Очищает центр поля при 100% энергии.</div><div class="bar"><i style="width:${s.energy}%"></i></div></div><button class="btn cyan" onclick="pulse()" ${s.energy<100?"disabled":""}>Взрыв</button></div></div>
+ <p class="tiny">Выбери фигуру, затем нажми на поле, чтобы её поставить.</p>`;draw();return}
+ if(page==="pet"){let p=s.pet;m.innerHTML=`<div class="row between"><div><div class="tiny">ТВОЙ КОМПАНЬОН</div><h1>Пипи</h1><p class="muted">Маленький друг, большие приключения.</p></div><button class="btn secondary" onclick="rename()">✎ Имя</button></div>
+ <div class="petroom"><div class="bubble">${p.hunger<30?"Я голодный…":p.happy<30?"Поиграем?":"Мурр… я тебя ждал! 💗"}</div>${cat()}</div>
+ <div class="panel" style="margin-top:12px">${stat("🍗 Сытость",p.hunger)}${stat("💗 Радость",p.happy)}</div>
+ <div class="grid2" style="margin-top:12px"><button class="tile" onclick="feed()"><div class="emoji">🍓</div><h3>Покормить</h3><div class="tiny">Корма: ${p.food}</div></button><button class="tile" onclick="playPet()"><div class="emoji">🧶</div><h3>Поиграть</h3><div class="tiny">Поднять настроение</div></button></div>
+ <div class="section"><h2>Вещи Пипи</h2><button class="btn secondary" onclick="go('skins')">Открыть</button></div><div class="panel">Открыто предметов: ${s.inventory.length}</div>`;return}
+ if(page==="levels"){m.innerHTML=`<div class="tiny">КАМПАНИЯ</div><h1>Карта уровней</h1><p class="muted">Проходи испытания, собирай звёзды и находи вещи для Пипи.</p><div class="panel"><b>🌌 Мир 1: Неоновый город</b><p class="tiny">Пройдено: ${s.completed.length}</p></div><div class="grid3" style="margin-top:12px">${Array.from({length:24},(_,i)=>{let n=i+1,open=n<=s.unlocked;return `<button class="tile" ${open?`onclick="startLevel(${n})"`:"disabled"} style="opacity:${open?1:.4}"><div class="emoji">${s.completed.includes(n)?"⭐":open?"🔹":"🔒"}</div><h3>Уровень ${n}</h3><div class="tiny">${open?"Цель: набрать очки":"Закрыт"}</div></button>`}).join("")}</div>`;return}
+ if(page==="skins"){let items=[["classic","🐱","Пипи классик",0],["hoodie","🩵","Голубой худи",150],["hat","🧢","Розовая шапка",220],["space","🚀","Космокот",700],["ball","⚽","Мячик",80],["yarn","🧶","Клубок",100],["bed","🛏️","Звёздная лежанка",350],["glow","✨","Неоновый след",300]];
+ m.innerHTML=`<div class="tiny">ГАРДЕРОБ И КОЛЛЕКЦИЯ</div><h1>Скины и вещи</h1><p class="muted">Покупай предметы за игровые монеты.</p><div class="panel row">${cat()}<div><b>Твой Пипи</b><div class="tiny">В коллекции: ${s.inventory.length}</div></div></div><div class="grid2" style="margin-top:12px">${items.map(it=>{let owned=s.items.includes(it[0]);return `<div class="tile" style="text-align:center"><div class="emoji">${it[1]}</div><h3>${it[2]}</h3><div class="tiny">${owned?"Уже открыто":it[3]+" 🪙"}</div><button class="btn ${owned?"secondary":""}" style="margin-top:9px;width:100%" onclick="buy('${it[0]}',${it[3]},'${it[1]}')" ${owned?"disabled":""}>${owned?"Получено":"Купить"}</button></div>`}).join("")}</div>`;return}
+ if(page==="shop"){m.innerHTML=`<div class="tiny">НАГРАДЫ И ПОКУПКИ</div><h1>Магазин Пипи</h1><p class="muted">Колесо удачи и полезные вещи.</p><div class="panel" style="text-align:center"><div class="tiny">БЕСПЛАТНОЕ ВРАЩЕНИЕ РАЗ В ДЕНЬ</div><h2>Колесо удачи 🎡</h2><div class="pointer"></div><div id="wheel" class="wheel"></div><div class="tiny">40% маленький приз · 25% обычный<br>15% хороший · 10% редкий · 7% эпический · 3% джекпот</div><button class="btn full" style="margin-top:14px" onclick="spin(false)" ${s.lastWheel===today()?"disabled":""}>${s.lastWheel===today()?"Возвращайся завтра":"Крутить бесплатно"}</button><button class="btn secondary full" style="margin-top:8px" onclick="spin(true)" ${s.coins<50?"disabled":""}>Дополнительное вращение — 50 🪙</button></div>
+ <div class="section"><h2>Популярное</h2></div><div class="grid2"><button class="tile" onclick="buyFood()"><div class="emoji">🍓</div><h3>Корм ×3</h3><div class="tiny">45 монет</div></button><button class="tile" onclick="go('skins')"><div class="emoji">👕</div><h3>Одежда</h3><div class="tiny">Выбрать вещи</div></button></div>`;return}
+ if(page==="account"){m.innerHTML=`<div class="tiny">ТВОЙ ПРОФИЛЬ</div><h1>Аккаунт</h1><div class="panel"><div class="row">${cat()}<div class="grow"><input class="form" id="nick" maxlength="18" value="${esc(s.name)}"><div class="tiny" style="margin-top:8px">ID: <b>${s.id}</b></div><button class="btn secondary" style="margin-top:8px" onclick="copyId()">Копировать ID</button></div></div><button class="btn full" style="margin-top:12px" onclick="saveNick()">Сохранить ник</button></div>
+ <div class="section"><h2>Статистика</h2></div><div class="grid2"><div class="tile"><div class="emoji">🏆</div><div class="tiny">Рекорд</div><h2>${s.record}</h2></div><div class="tile"><div class="emoji">🗺️</div><div class="tiny">Уровни</div><h2>${s.completed.length}</h2></div><div class="tile"><div class="emoji">🎮</div><div class="tiny">Партий</div><h2>${s.games}</h2></div><div class="tile"><div class="emoji">✨</div><div class="tiny">Всего очков</div><h2>${s.total}</h2></div></div>
+ <div class="section"><h2>Ранг</h2></div><div class="panel"><h2>${s.record>=10000?"💎 Алмаз":s.record>=5000?"🥇 Золото":s.record>=1500?"🥈 Серебро":"🥉 Бронза"}</h2><div class="tiny">Ранг зависит от твоих игровых результатов.</div></div>
+ <div class="section"><h2>Друзья</h2></div><div class="panel"><p class="tiny">В демо-версии можно хранить ID друзей локально. Реальный поиск игроков требует сервера.</p><input class="form" id="friend" placeholder="PIPI-123456"><button class="btn cyan full" style="margin-top:8px" onclick="addFriend()">Добавить ID</button>${s.friends.map(f=>`<p>🐾 ${esc(f)} <button class="btn secondary" onclick="removeFriend('${f}')">×</button></p>`).join("")}</div>
+ <div class="section"><h2>Настройки</h2></div><div class="panel"><button class="btn secondary full" onclick="daily()">🎁 Ежедневный подарок</button><button class="btn secondary full" style="margin-top:8px" onclick="resetGame()">Сбросить прогресс</button></div>`;return}
 }
-function newOrb(){return {charge:0}}
-function initBoard(){board=Array.from({length:64},()=>Math.random()<.74?newOrb():null);if(board.every(x=>!x))board[27]=newOrb();draw()}
-function draw(){
- $('board').innerHTML='';
- board.forEach((cell,i)=>{
-  const b=document.createElement('button');b.className='cell'+(!cell?' empty':'');b.disabled=!cell||busy;
-  if(cell){const o=document.createElement('i');o.className='orb';o.style.setProperty('--orb',skin()[4]);o.style.setProperty('--alt',skin()[5]);b.append(o);if(cell.charge)b.classList.add('charged')}
-  b.onclick=()=>trigger(i);$('board').append(b)
- });
- $('score').textContent=fmt(score);$('combo').textContent='x'+chainNow
-}
-function neighbors(i){const r=i>>3,c=i%8,a=[];if(r)a.push(i-8);if(r<7)a.push(i+8);if(c)a.push(i-1);if(c<7)a.push(i+1);return a}
-function trigger(i){
- if(busy||!board[i]||!run)return;
- busy=true;let queue=[i],seen=new Set(),burst=0,guard=0;
- while(queue.length&&guard++<600){
-  const n=queue.shift();if(seen.has(n))continue;seen.add(n);
-  if(!board[n])board[n]=newOrb();
-  board[n].charge++;
-  if(board[n].charge>=2){
-   board[n]=null;burst++;
-   neighbors(n).forEach(k=>{
-    if(!board[k])board[k]=newOrb();
-    board[k].charge++;
-    if(board[k].charge>=2&&!seen.has(k))queue.push(k)
-   })
-  }
- }
- chainNow=Math.max(1,burst);
- const points=Math.round((burst*10+Math.max(0,burst-1)*15)*(1+(d.up.charge||0)*.15));
- score+=points;d.orbs+=burst;if(burst>1)d.chains++;
- d.crystals+=Math.max(1,Math.floor(burst*(1+(d.up.magnet||0)*.2)));
- $('message').textContent=burst>3?'⚡ CHAIN REACTION x'+burst+' · +'+points:burst>1?'COMBO x'+burst+' · +'+points:'IMPULSE · +'+points;
- let empty=board.map((x,j)=>x===null?j:-1).filter(j=>j>=0);
- for(let k=0;k<Math.min(3+(d.up.stability||0),empty.length);k++){
-  const pos=Math.floor(Math.random()*empty.length);board[empty.splice(pos,1)[0]]=newOrb()
- }
- busy=false;draw();save()
-}
-function newRun(){if(run&&score>0)finish(false);score=0;chainNow=1;run=true;busy=false;initBoard();$('message').textContent='ГОТОВ К ЗАПУСКУ';$('gameSub').textContent='Новый забег · собери длинную цепь';view('game')}
-function finish(show){if(!run)return;run=false;d.runs++;d.total+=score;const best=score>d.best;if(best)d.best=score;d.bestCombo=Math.max(d.bestCombo,chainNow);save();if(show)alert((best?'НОВЫЙ РЕКОРД!\n':'Забег завершён.\n')+'Результат: '+fmt(score)+' очков.')}
-function renderSkins(){
- const g=$('skinGrid');g.innerHTML='';
- SKINS.forEach(s=>{
-  const owned=d.owned.includes(s[0]),selected=d.skin===s[0],el=document.createElement('div');el.className='item'+(selected?' selected':'');
-  el.innerHTML=`<div class="swatch"><i class="orb" style="--orb:${s[4]};--alt:${s[5]}"></i></div><h3>${s[1]}</h3><p>${s[2]}</p><button class="btn ${selected?'primary':''}">${selected?'✓ ВЫБРАН':owned?'ВЫБРАТЬ':'КУПИТЬ · '+s[3]+' ◈'}</button>`;
-  el.querySelector('button').onclick=()=>{if(owned){d.skin=s[0];save();toast('Скин применён')}else if(d.crystals>=s[3]){d.crystals-=s[3];d.owned.push(s[0]);d.skin=s[0];save();toast('Скин открыт!')}else toast('Не хватает кристаллов')};g.append(el)
- })
-}
-function renderUpgrades(){
- const list=$('upgradeList');list.innerHTML='';
- UPGRADES.forEach(u=>{
-  const l=d.up[u[0]]||0,cost=Math.round(u[4]*Math.pow(1.75,l)),el=document.createElement('div');el.className='upgrade';
-  el.innerHTML=`<div class="uicon">${u[1]}</div><div class="uinfo"><b>${u[2]} <span class="cyan">LV ${l}/${u[5]}</span></b><small>${u[3]}</small></div><div class="uside">${l>=u[5]?'<span class="gold">MAX</span>':'<span class="gold">'+cost+' ◈</span><br><button class="btn" '+(d.crystals<cost?'disabled':'')+'>УЛУЧШИТЬ</button>'}</div>`;
-  const b=el.querySelector('button');if(b)b.onclick=()=>{if(d.crystals<cost)return toast('Не хватает кристаллов');d.crystals-=cost;d.up[u[0]]=l+1;save();toast('Улучшение куплено')};list.append(el)
- })
-}
-function escapeHTML(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function renderFriends(){
- $('friendCount').textContent=d.friends.length+' друзей';const list=$('friendList');list.innerHTML='';
- if(!d.friends.length){list.innerHTML='<p class="notice">Здесь пока пусто. Онлайн-поиск появится после подключения сервера.</p>';return}
- d.friends.forEach((f,i)=>{const el=document.createElement('div');el.className='friend';el.innerHTML=`<span class="avatar">${escapeHTML(f.name[0])}</span><div><b>${escapeHTML(f.name)}</b><br><small>${escapeHTML(f.id)}</small></div><button class="btn">УДАЛИТЬ</button>`;el.querySelector('button').onclick=()=>{d.friends.splice(i,1);save()};list.append(el)})
-}
-function addFriend(){
- const id=$('friendId').value.trim().toUpperCase();
- if(!/^CR-[A-Z0-9]{4,12}$/.test(id))return toast('Формат ID: CR-XXXXXX');
- if(id===d.id)return toast('Это твой собственный ID');
- if(d.friends.some(f=>f.id===id))return toast('Этот ID уже добавлен');
- d.friends.push({id,name:'Игрок '+id.slice(-4)});$('friendId').value='';save();toast('Добавлено в локальный список')
-}
-function saveName(){const n=$('nameInput').value.trim().slice(0,18);if(!n)return toast('Введи имя');d.name=n;save();toast('Имя сохранено')}
-async function copyId(){try{await navigator.clipboard.writeText(d.id);toast('ID скопирован')}catch(e){prompt('Скопируй игровой ID:',d.id)}}
-function resetProgress(){if(confirm('Удалить рекорды, кристаллы, скины и улучшения?')){localStorage.removeItem(KEY);d=fresh();score=0;run=false;save();newRun()}}
-window.addEventListener('beforeunload',()=>{try{localStorage.setItem(KEY,JSON.stringify(d))}catch(e){}});
-renderAll();newRun();
+function stat(label,n){return `<div class="stat"><span>${label}</span><div class="bar"><i style="width:${n}%"></i></div><b>${n}%</b></div>`}
+function esc(x){return String(x).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function today(){return new Date().toLocaleDateString("en-CA")}
+function daily(){if(s.daily===today()){toast("Подарок уже получен сегодня");return} s.daily=today();s.streak++;let n=s.streak%7===0?100:25;s.coins+=n;save();modal(`🎁<h2>Подарок Пипи!</h2><p>Ты получил ${n} монет!</p><button class="btn full" onclick="closeModal();render()">Ура!</button>`)}
+function modal(html){$("#modal").innerHTML=`<div class="modalbg" onclick="if(event.target===this)closeModal()"><div class="modal" style="text-align:center">${html}</div></div>`}
+function closeModal(){$("#modal").innerHTML=""}
+function rename(){modal(`<h2>Имя питомца</h2><input class="form" id="petname" maxlength="16" value="Пипи"><button class="btn full" style="margin-top:10px" onclick="closeModal();toast('Внешность Пипи скоро можно будет менять')">Сохранить</button>`)}
+function feed(){if(!s.pet.food){toast("Корма нет — загляни в магазин");return}s.pet.food--;s.pet.hunger=Math.min(100,s.pet.hunger+35);s.pet.happy=Math.min(100,s.pet.happy+5);save();render();toast("Пипи доволен! 💗")}
+function playPet(){s.pet.happy=Math.min(100,s.pet.happy+10);save();render();toast("Пипи рад твоему вниманию!")}
+function buyFood(){if(s.coins<45){toast("Не хватает монет");return}s.coins-=45;s.pet.food+=3;save();render();toast("Корм куплен 🍓")}
+function buy(id,cost,emoji){if(s.items.includes(id)){toast("Уже есть");return}if(s.coins<cost){toast("Не хватает монет");return}s.coins-=cost;s.items.push(id);s.inventory.push(emoji);save();render();toast("Предмет добавлен в коллекцию!")}
+function spin(extra){if(extra){if(s.coins<50){toast("Не хватает монет");return}s.coins-=50}else{if(s.lastWheel===today()){toast("Бесплатное вращение уже использовано");return}s.lastWheel=today()}
+ save();let r=Math.random()*100,prize;if(r<40)prize={coins:15,name:"Маленький приз"};else if(r<65)prize={coins:35,name:"Обычный приз"};else if(r<80)prize={coins:60,name:"Хороший приз"};else if(r<90)prize={item:"🧶",name:"Редкая игрушка"};else if(r<97)prize={item:"🩵",name:"Эпический костюм"};else prize={item:"🚀",name:"ДЖЕКПОТ!"};
+ let w=$("#wheel");if(w)w.style.transform=`rotate(${1440+Math.random()*360}deg)`;
+ setTimeout(()=>{if(prize.coins)s.coins+=prize.coins;else s.inventory.push(prize.item);save();modal(`<div style="font-size:45px">${prize.item||"🪙"}</div><h2>${prize.name}</h2><p>${prize.coins?"+ "+prize.coins+" монет":"Новая вещь для Пипи!"}</p><button class="btn full" onclick="closeModal();render()">Забрать</button>`);render()},2200)}
+function copyId(){if(navigator.clipboard)navigator.clipboard.writeText(s.id).then(()=>toast("ID скопирован")).catch(()=>toast(s.id));else toast(s.id)}
+function saveNick(){let n=$("#nick").value.trim();if(!n)return toast("Введи никнейм");s.name=n.slice(0,18);save();render();toast("Ник сохранён")}
+function addFriend(){let e=$("#friend"),v=e.value.trim().toUpperCase();if(!/^PIPI-\d{6}$/.test(v))return toast("Формат ID: PIPI-123456");if(v===s.id)return toast("Это твой ID");if(s.friends.includes(v))return toast("Уже добавлен");s.friends.push(v);save();render()}
+function removeFriend(id){s.friends=s.friends.filter(x=>x!==id);save();render()}
+function resetGame(){modal(`<h2>Сбросить прогресс?</h2><button class="btn secondary" onclick="closeModal()">Отмена</button> <button class="btn" onclick="localStorage.removeItem('pipiSave');location.reload()">Сбросить</button>`)}
+function deal(){pieces=[0,1,2].map(()=>({shape:shapes[Math.floor(Math.random()*shapes.length)],color:colors[Math.floor(Math.random()*colors.length)]}))}
+function newGame(){board=Array(64).fill("");points=0;selected=-1;levelMode=false;deal();go("game")}
+function startLevel(n){levelMode=n;newGame();levelMode=n;toast("Уровень "+n+": набери "+n*500+" очков")}
+function draw(){let b=$("#board"),p=$("#pieces");if(!b||!p)return;b.innerHTML=board.map((v,i)=>`<button class="cell ${v?"f":""}" style="${v?`--c:${v}`:""}" onclick="place(${i})"></button>`).join("");
+ p.innerHTML=pieces.map((x,i)=>`<button class="piece ${selected===i?"sel":""}" onclick="selectPiece(${i})">${x?shapeHtml(x.shape,x.color):"✓"}</button>`).join("")}
+function shapeHtml(shape,color){return `<div class="shape" style="grid-template-columns:repeat(${Math.max(...shape.map(r=>r.length))},14px);--c:${color}">${shape.flatMap(r=>r.map(v=>`<span class="sq" style="${v?"":"visibility:hidden"}"></span>`)).join("")}</div>`}
+function selectPiece(i){if(!pieces[i])return;selected=i;draw()}
+function can(shape,r,c){for(let y=0;y<shape.length;y++)for(let x=0;x<shape[y].length;x++)if(shape[y][x]&&(r+y>=8||c+x>=8||board[(r+y)*8+c+x]))return false;return true}
+function place(i){if(selected<0||!pieces[selected])return toast("Сначала выбери фигуру");let sh=pieces[selected].shape,col=i%8,row=Math.floor(i/8),p=pieces[selected];if(!can(sh,row,col))return toast("Фигура не помещается");
+ let n=0;sh.forEach((r,y)=>r.forEach((v,x)=>{if(v){board[(row+y)*8+col+x]=p.color;n++}}));points+=n*10;pieces[selected]=null;selected=-1;
+ let clear=new Set();for(let r=0;r<8;r++)if(board.slice(r*8,r*8+8).every(Boolean))for(let c=0;c<8;c++)clear.add(r*8+c);for(let c=0;c<8;c++)if(board.filter((v,i)=>i%8===c).every(Boolean))for(let r=0;r<8;r++)clear.add(r*8+c);
+ if(clear.size){points+=clear.size*15;s.lines=(s.lines||0)+1;clear.forEach(i=>board[i]="");s.energy=Math.min(100,s.energy+clear.size*3);s.coins+=clear.size>=16?5:0;toast("Линия очищена! ✨")}
+ if(pieces.every(x=>!x))deal();
+ save();draw();
+ if(levelMode&&points>=levelMode*500){let n=levelMode;if(!s.completed.includes(n))s.completed.push(n);s.unlocked=Math.max(s.unlocked,n+1);s.coins+=35;s.xp+=25;s.pet.food++;save();modal(`<h2>Уровень пройден! ⭐</h2><p>+35 монет · +25 XP · +1 корм</p><button class="btn full" onclick="closeModal();go('levels')">Продолжить</button>`);return}
+ if(!pieces.some(p=>p&&Array.from({length:8},(_,r)=>Array.from({length:8},(_,c)=>can(p.shape,r,c))).flat().some(Boolean))){s.games++;s.record=Math.max(s.record,points);s.total+=points;s.xp+=Math.floor(points/20);s.coins+=Math.floor(points/150);save();modal(`<h2>Игра окончена</h2><p>Очки: ${points}</p><p>Награда: ${Math.floor(points/150)} монет</p><button class="btn full" onclick="closeModal();newGame()">Играть снова</button>`);return}
+ render()}
+function pulse(){if(s.energy<100)return toast("Заряди ядро до 100%");for(let r=2;r<5;r++)for(let c=2;c<5;c++)board[r*8+c]="";s.energy=0;points+=120;save();render();toast("Импульс! +120 очков")}
+function boot(){render();setTimeout(()=>{if(page==="splash")go("login")},1400)}
+boot();
 </script>
 </body>
 </html>
+
 
