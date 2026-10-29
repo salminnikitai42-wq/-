@@ -3,194 +3,242 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#080c20">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#071535">
 <title>NEON BLOCKS: PIPI</title>
 <style>
-:root{
- --bg:#080c20;--panel:#121a38;--line:#293968;
- --cyan:#45dcff;--pink:#ff65c7;--purple:#a78bfa;
- --gold:#ffd36b;--text:#f5f7ff;--muted:#a0acd0
-}
+:root{--bg:#071535;--panel:#102653;--line:#315a9a;--blue:#45e4ff;--pink:#ff71d0;--purple:#a68bff;--gold:#ffd66d;--text:#f4f7ff;--muted:#a6b8e9}
 *{box-sizing:border-box}
-body{margin:0;background:radial-gradient(ellipse at top,#20285b,var(--bg) 65%);
- color:var(--text);font-family:system-ui,-apple-system,sans-serif;min-height:100vh}
-button,input{font:inherit}
-button{color:inherit;cursor:pointer}
-.app{max-width:540px;margin:auto;padding-bottom:90px}
-header{position:sticky;top:0;z-index:5;background:#090e24ee;backdrop-filter:blur(15px);
- padding:14px 16px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line)}
-.logo{font-weight:1000;letter-spacing:1px}.logo span{display:block;color:var(--pink);font-size:11px;letter-spacing:4px}
-.wallet{background:#172044;padding:8px 11px;border:1px solid var(--line);border-radius:20px;font-weight:800}
-main{padding:16px;animation:fade .2s}
+body{margin:0 auto;max-width:520px;min-height:100vh;background:radial-gradient(ellipse at top,#1b3977,#071535 55%,#030918);color:var(--text);font-family:system-ui,-apple-system,sans-serif;padding-bottom:85px}
+button{font:inherit;border:0;cursor:pointer;color:inherit;touch-action:manipulation}
+button:active{transform:scale(.97)}
+header{position:sticky;top:0;z-index:5;background:#071535ed;backdrop-filter:blur(12px);padding:13px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #315a9a}
+.brand{font-weight:900;font-size:13px}.brand span{display:block;color:var(--pink);letter-spacing:3px;font-size:10px}
+.money{display:flex;gap:6px}.pill{padding:8px 10px;border:1px solid var(--line);border-radius:12px;background:#102653;font-size:12px;font-weight:900}
+.screen{display:none;padding:15px;animation:fade .2s}.screen.active{display:block}
 @keyframes fade{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
-h1{font-size:27px;margin:8px 0}h2{font-size:20px;margin:8px 0}
-p{line-height:1.5}.muted,.tiny{color:var(--muted)}.tiny{font-size:12px;line-height:1.5}
-.panel,.tile{background:linear-gradient(145deg,#151f43,#10162f);border:1px solid var(--line);border-radius:19px;padding:14px}
-.hero{background:radial-gradient(circle at 80% 20%,#55358e,#19214c 55%,#11172f);border:1px solid #514b9b;border-radius:23px;padding:18px;overflow:hidden}
-.row{display:flex;align-items:center;gap:12px}.between{justify-content:space-between}.grow{flex:1;min-width:0}
-.btn{border:0;border-radius:13px;padding:12px 15px;font-weight:850;background:linear-gradient(110deg,#874fff,#ef58c6);box-shadow:0 5px 18px #9a4fff33}
-.btn:active{transform:scale(.98)}.secondary{background:#172143;border:1px solid #344779;box-shadow:none}
-.cyan{background:linear-gradient(110deg,#15bde6,#6575ff)}.gold{background:linear-gradient(110deg,#f7b83f,#ffe08a);color:#291a40}
-.full{width:100%}.hidden{display:none!important}
-.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
-.tile{text-align:left;min-width:0}.tile h3{font-size:14px;margin:6px 0}.emoji{font-size:30px}
-.section{display:flex;justify-content:space-between;align-items:center;margin:20px 0 10px}
-.section h2{font-size:16px}.nav{position:fixed;z-index:10;bottom:0;left:50%;transform:translateX(-50%);width:min(540px,100%);
- padding:8px 4px calc(8px + env(safe-area-inset-bottom));display:grid;grid-template-columns:repeat(5,1fr);
- background:#090e24f5;border-top:1px solid var(--line);backdrop-filter:blur(15px)}
-.nav button{background:none;border:0;color:#98a4ce;font-size:10px;font-weight:800;padding:6px 1px;border-radius:10px}
-.nav button span{display:block;font-size:20px;margin-bottom:3px}.nav button.active{background:#2a1744;color:var(--pink)}
-.petroom{min-height:220px;border-radius:20px;border:1px solid #514b9b;
- background:radial-gradient(ellipse at bottom,#5b3c83,#222754 65%,#131933);
- display:grid;place-items:center;position:relative;overflow:hidden}
-.petroom:after{content:"";position:absolute;bottom:0;height:38px;width:100%;background:repeating-linear-gradient(90deg,#ff65c722 0 20px,#45dcff22 20px 40px)}
-.cat{width:140px;height:140px;image-rendering:pixelated;filter:drop-shadow(0 5px 14px #45dcff66);position:relative;z-index:1}
-.bubble{position:absolute;right:10px;top:12px;background:#fff;color:#25224d;border-radius:12px;padding:8px;font-size:12px;z-index:2}
-.bar{height:8px;background:#273256;border-radius:20px;overflow:hidden}.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--cyan),var(--pink));border-radius:20px}
-.stat{display:grid;grid-template-columns:75px 1fr 35px;gap:8px;align-items:center;margin:12px 0;font-size:12px}
-.board{display:grid;grid-template-columns:repeat(8,1fr);gap:4px;margin:14px auto;max-width:440px}
-.cell{aspect-ratio:1;border-radius:5px;background:#121b39;border:1px solid #26345f;min-width:0}
-.cell.f{background:var(--c);border-color:#ffffff66;box-shadow:0 0 8px var(--c)}
-.pieces{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.piece{min-height:75px;border-radius:12px;border:1px solid var(--line);background:#121a37;display:grid;place-items:center}
-.piece.sel{border-color:var(--pink);box-shadow:0 0 12px #ff65c744}
-.shape{display:grid;gap:3px}.sq{width:14px;height:14px;border-radius:3px;background:var(--c);box-shadow:0 0 6px var(--c)}
-.form{width:100%;background:#080f29;border:1px solid #344779;color:white;padding:12px;border-radius:12px}
-.wheel{width:220px;height:220px;border-radius:50%;border:6px solid #a4b5ff;margin:15px auto;
- background:conic-gradient(#566bdb 0 40%,#2ebedc 40% 65%,#a36aff 65% 80%,#ed65c1 80% 90%,#e9b950 90% 97%,#fff0a8 97%);
- box-shadow:0 0 25px #8b5cfaaa;transition:transform 3s cubic-bezier(.13,.75,.16,1);position:relative}
-.wheel:after{content:"P";position:absolute;inset:39%;display:grid;place-items:center;border-radius:50%;background:#111a3c;border:3px solid white;font-weight:1000}
-.pointer{width:0;height:0;border-left:13px solid transparent;border-right:13px solid transparent;border-top:27px solid #fff0a0;margin:auto}
-.modalbg{position:fixed;inset:0;background:#000b;z-index:20;display:grid;place-items:center;padding:20px}
-.modal{width:min(400px,100%);background:#121a38;border:1px solid #465998;border-radius:20px;padding:20px}
-.toast{position:fixed;bottom:95px;left:50%;transform:translateX(-50%);z-index:30;background:#f5f6ff;color:#151a34;padding:12px 17px;border-radius:12px;font-weight:800;font-size:13px;max-width:90%;white-space:nowrap}
+h1{font-size:24px;margin:5px 0}h2{font-size:18px;margin:4px 0}
+.sub{color:var(--muted);font-size:12px;margin:5px 0 15px}
+.hero,.panel{background:linear-gradient(145deg,#16346c,#0b1c42);border:1px solid var(--line);border-radius:20px;padding:15px;margin-bottom:12px;box-shadow:inset 0 1px #ffffff0b}
+.hero{text-align:center;background:radial-gradient(circle at 50% 35%,#394b91,#112653 60%,#0b1b40)}
+.cat{font-size:105px;padding:25px 0;filter:drop-shadow(0 0 18px #6ae7ff55);animation:bob 3s infinite ease-in-out}
+@keyframes bob{50%{transform:translateY(-7px)}}
+.eyebrow{font-size:10px;color:var(--blue);letter-spacing:2px;font-weight:900}
+.daily{display:flex;align-items:center;gap:9px;background:#eaf1ff;color:#142750;text-align:left;padding:10px;border-radius:14px;margin-top:10px}
+.daily div{flex:1;font-size:12px;font-weight:800}.daily small{display:block;color:#6378a6;font-weight:500}
+.primary{width:100%;padding:14px;border-radius:14px;background:linear-gradient(100deg,#ff70ce,#a56fff);font-weight:900;margin:7px 0;box-shadow:0 6px 18px #d05fd044}
+.secondary{padding:10px 12px;background:#17366c;border:1px solid #4377bd;border-radius:12px;font-weight:800;font-size:12px}
+.section-title{font-weight:900;margin:18px 2px 10px;display:flex;justify-content:space-between;align-items:center;font-size:14px}
+.section-title button{background:none;color:var(--blue);font-size:11px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.tile{padding:13px 3px;border-radius:15px;background:#102653;border:1px solid var(--line);text-align:center;font-size:11px;font-weight:800}
+.tile span{display:block;font-size:27px;margin-bottom:6px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+.stat{text-align:center;background:#071735;border:1px solid #294777;border-radius:12px;padding:10px 3px}
+.stat b{display:block;font-size:17px}.stat small{font-size:10px;color:var(--muted)}
+.barrow{margin:13px 0}.barlabel{display:flex;justify-content:space-between;font-size:11px;margin-bottom:5px}
+.bar{height:8px;background:#06132c;border:1px solid #2c4d83;border-radius:99px;overflow:hidden}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--blue),#7f94ff);border-radius:99px}
+.bar.pink i{background:linear-gradient(90deg,var(--pink),#bd83ff)}
+.bar.gold i{background:linear-gradient(90deg,#ffbd62,#ffe98d)}
+.actions{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.action{padding:10px 2px;background:#eaf1ff;color:#142750;border-radius:12px;font-size:10px;font-weight:900}
+.action span{display:block;font-size:22px;margin-bottom:5px}
+.board{display:grid;grid-template-columns:repeat(8,1fr);gap:4px;padding:7px;background:#06132e;border:1px solid #315a9a;border-radius:15px}
+.cell{aspect-ratio:1;min-width:0;border-radius:4px;background:#122858;border:1px solid #1c3b72;padding:0}
+.cell.filled{background:linear-gradient(145deg,#54eaff,#3576e9);border-color:#a2f5ff}
+.cell.pink{background:linear-gradient(145deg,#ff9ee6,#b24aff)}
+.cell.gold{background:linear-gradient(145deg,#ffe58b,#ff9e50)}
+.pieces{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
+.piece{height:75px;border-radius:13px;background:#102653;border:1px solid #34578d;display:grid;place-items:center}
+.piece.selected{border:2px solid var(--pink);box-shadow:0 0 13px #ff70ce55}
+.piece-grid{display:grid;gap:3px}.piece-grid i{width:13px;height:13px;background:linear-gradient(145deg,#ff8cdb,#ad62ff);border:1px solid #ffc4f1;border-radius:3px}
+.piece-grid i.empty{opacity:0}
+.tabs{display:flex;gap:5px;margin:12px 0;background:#071735;padding:4px;border-radius:12px}
+.tab{flex:1;background:none;color:var(--muted);padding:9px 3px;border-radius:9px;font-size:10px}
+.tab.active{background:#eaf1ff;color:#142750;font-weight:900}
+.cards{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}
+.card{padding:11px;background:#102653;border:1px solid var(--line);border-radius:15px;text-align:center}
+.card .art{font-size:48px;padding:8px}
+.card b{display:block;font-size:12px}.card small{display:block;color:var(--muted);font-size:10px;margin:5px 0 9px}
+.buy{width:100%;padding:9px 4px;border-radius:10px;background:#eaf1ff;color:#142750;font-size:11px;font-weight:900}
+.buy.equipped{background:#54e9d0}
+.world{padding:14px;text-align:left;min-height:115px;background:linear-gradient(145deg,#2674a5,#343080 65%,#191d51);border:1px solid #4473b4;border-radius:16px}
+.world span{display:block;font-size:30px}.world b{display:block;font-size:12px;margin:6px 0}.world small{font-size:10px;color:#d3e3ff}
+.wheel{width:180px;height:180px;border-radius:50%;margin:15px auto;display:grid;place-items:center;border:7px solid #f6caff;outline:3px solid #7654d7;box-shadow:0 0 25px #b266ff7a;background:conic-gradient(#ff79d5 0 45deg,#3cdbf7 45deg 90deg,#ffd76d 90deg 135deg,#8c79ff 135deg 180deg,#ff79d5 180deg 225deg,#3cdbf7 225deg 270deg,#ffd76d 270deg 315deg,#8c79ff 315deg)}
+.wheel span{font-size:52px;background:#101e4e;border:4px solid #ffe6ff;border-radius:50%;width:80px;height:80px;display:grid;place-items:center}
+.odds{display:grid;grid-template-columns:1fr 1fr;gap:6px;text-align:left;margin:12px 0}
+.odds div{background:#071735;border-radius:9px;padding:8px;font-size:10px}.odds b{float:right;color:var(--gold)}
+.friend{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #294474}
+.face{width:40px;height:40px;border-radius:12px;background:#1c3970;display:grid;place-items:center;font-size:24px}
+.friend .info{flex:1}.friend b{display:block;font-size:12px}.friend small{font-size:10px;color:var(--muted)}
+input{width:100%;padding:11px;border-radius:10px;border:1px solid var(--line);background:#071735;color:white;margin:6px 0}
+nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(520px,100%);z-index:8;display:grid;grid-template-columns:repeat(6,1fr);padding:7px 3px calc(7px + env(safe-area-inset-bottom));background:#06132ff5;backdrop-filter:blur(15px);border-top:1px solid #31538b}
+.navbtn{background:transparent;color:#829bd1;border-radius:10px;padding:5px 0;font-size:9px;font-weight:800}
+.navbtn span{display:block;font-size:20px;margin-bottom:3px}.navbtn.active{color:white;background:#173469}
+.toast{position:fixed;z-index:20;bottom:95px;left:50%;transform:translateX(-50%);background:#eaf1ff;color:#142750;padding:12px 16px;border-radius:12px;font-size:12px;font-weight:900;display:none;width:max-content;max-width:90%;text-align:center}
+.toast.show{display:block}
+@media(min-width:500px){body{border-left:1px solid #18335f;border-right:1px solid #18335f}}
 </style>
 </head>
 <body>
-<div class="app">
-<header id="header" class="hidden">
- <div class="logo">NEON BLOCKS <span>✦ PIPI ✦</span></div>
- <div class="wallet">🪙 <b id="coins">100</b></div>
+<header>
+ <div class="brand">NEON BLOCKS <span>P I P I 🐾</span></div>
+ <div class="money"><div class="pill">🪙 <b id="coins">1250</b></div><div class="pill">💎 <b id="gems">45</b></div></div>
 </header>
-<main id="screen"></main>
-<nav id="nav" class="nav hidden">
- <button data-page="game"><span>🎮</span>Игра</button>
- <button data-page="pet"><span>🐾</span>Питомец</button>
- <button data-page="levels"><span>🗺️</span>Уровни</button>
- <button data-page="skins"><span>👕</span>Скины</button>
- <button data-page="account"><span>👤</span>Аккаунт</button>
+
+<main>
+<section class="screen active" id="home">
+ <div class="hero">
+  <div class="eyebrow">ТВОЙ МАЛЕНЬКИЙ МИР</div>
+  <h1>Привет, <span id="helloName">Пипи!</span></h1>
+  <div class="sub">Твой пушистый друг заждался 💙</div>
+  <div class="cat" id="homeCat">🐱</div>
+  <div class="daily"><span style="font-size:25px">🎁</span><div>Ежедневный подарок<small>Забери 100 монет</small></div><button class="buy" id="dailyBtn" onclick="claimDaily()">+100 🪙</button></div>
+ </div>
+ <button class="primary" onclick="startGame()">▶　ИГРАТЬ В БЛОКИ</button>
+ <div class="section-title">Твой мир <button onclick="show('pet')">К питомцу →</button></div>
+ <div class="grid3">
+  <button class="tile" onclick="show('pet')"><span>🐾</span>Питомец</button>
+  <button class="tile" onclick="show('levels')"><span>🗺️</span>Уровни</button>
+  <button class="tile" onclick="show('shop')"><span>🎡</span>Рулетка</button>
+ </div>
+ <div class="section-title">Статистика</div>
+ <div class="panel stats"><div class="stat"><b id="homeScore">0</b><small>Очки</small></div><div class="stat"><b id="homeBest">0</b><small>Рекорд</small></div><div class="stat"><b id="homeLevel">1</b><small>Уровень</small></div></div>
+</section>
+
+<section class="screen" id="pet">
+ <h1>Комната Пипи 🐾</h1><div class="sub">Заботься о своём пушистом друге.</div>
+ <div class="hero"><div class="eyebrow">УЮТНЫЙ УГОЛОК</div><div class="cat" id="petCat">🐱</div>🪟　🧸　🪴</div>
+ <div class="panel">
+  <div class="barrow"><div class="barlabel"><span>🍗 Голод</span><b id="hungerNum">70%</b></div><div class="bar gold"><i id="hungerBar" style="width:70%"></i></div></div>
+  <div class="barrow"><div class="barlabel"><span>💗 Счастье</span><b id="happyNum">85%</b></div><div class="bar pink"><i id="happyBar" style="width:85%"></i></div></div>
+  <div class="barrow"><div class="barlabel"><span>⚡ Энергия</span><b id="energyNum">60%</b></div><div class="bar"><i id="energyBar" style="width:60%"></i></div></div>
+  <div class="actions"><button class="action" onclick="petAction('feed')"><span>🍲</span>Кормить</button><button class="action" onclick="petAction('play')"><span>🧶</span>Играть</button><button class="action" onclick="petAction('sleep')"><span>🌙</span>Спать</button><button class="action" onclick="show('skins')"><span>👕</span>Одеть</button></div>
+ </div>
+ <div class="panel"><b>💞 Привязанность</b><div class="barrow"><div class="barlabel"><span>Дружба с Пипи</span><b id="bondNum">12 / 100</b></div><div class="bar pink"><i id="bondBar" style="width:12%"></i></div></div></div>
+</section>
+
+<section class="screen" id="game">
+ <h1>Неоновые блоки</h1><div class="sub">Выбери фигуру, затем клетку для размещения.</div>
+ <div class="panel stats"><div class="stat"><b id="gameScore">0</b><small>Счёт</small></div><div class="stat"><b id="gameBest">0</b><small>Рекорд</small></div><div class="stat"><b id="gameLines">0</b><small>Линии</small></div></div>
+ <div class="board" id="board"></div><div class="pieces" id="pieces"></div>
+ <button class="secondary" style="width:100%;margin-top:12px" onclick="startGame()">↻ Новая игра</button>
+</section>
+
+<section class="screen" id="levels">
+ <h1>Карта приключений 🗺️</h1><div class="sub">Открывай новые уголки мира Пипи.</div>
+ <div class="panel stats"><div class="stat"><b id="levelCount">1/24</b><small>Уровни</small></div><div class="stat"><b>4</b><small>Мира</small></div><div class="stat"><b>⭐</b><small>Коллекция</small></div></div>
+ <div class="cards">
+  <button class="world" onclick="openLevel(1)"><span>🏙️</span><b>Неоновый город</b><small>Уровни 1–6</small></button>
+  <button class="world" onclick="openLevel(7)"><span>🌳</span><b>Мятный лес</b><small>Уровни 7–12</small></button>
+  <button class="world" onclick="openLevel(13)"><span>☁️</span><b>Облачный остров</b><small>Уровни 13–18</small></button>
+  <button class="world" onclick="openLevel(19)"><span>🌌</span><b>Космический сон</b><small>Уровни 19–24</small></button>
+ </div>
+ <div class="section-title">Уровни города</div><div class="panel" id="levelList"></div>
+</section>
+
+<section class="screen" id="skins">
+ <h1>Гардероб Пипи 👕</h1><div class="sub">Собирай образы и выбирай любимый стиль.</div>
+ <div class="tabs"><button class="tab active" onclick="skinTab('all',this)">Все</button><button class="tab" onclick="skinTab('owned',this)">Мои</button><button class="tab" onclick="skinTab('rare',this)">Редкие</button></div>
+ <div class="cards" id="skinGrid"></div>
+</section>
+
+<section class="screen" id="shop">
+ <h1>Магазин удачи 🎡</h1><div class="sub">Крути колесо и собирай необычные награды.</div>
+ <div class="panel" style="text-align:center;background:radial-gradient(circle,#493e9d,#102453 65%,#0a1939)">
+  <div class="eyebrow">LUCKY WHEEL</div><div class="wheel" id="wheel"><span>🐱</span></div>
+  <div class="sub">Попытка стоит 50 монет</div>
+  <div class="odds"><div>🧸 Обычный предмет <b>40%</b></div><div>💎 Редкий приз <b>15%</b></div><div>👑 Легендарный скин <b>5%</b></div><div>🪙 Монеты <b>40%</b></div></div>
+  <button class="primary" onclick="spinWheel()">КРУТИТЬ ЗА 50 🪙</button>
+ </div>
+ <div class="section-title">Полезные предметы</div><div class="cards" id="shopGrid"></div>
+ <p class="sub">Все призы в этой версии виртуальные.</p>
+</section>
+
+<section class="screen" id="profile">
+ <h1>Профиль игрока</h1><div class="sub">Твой прогресс и достижения.</div>
+ <div class="panel"><div style="display:flex;align-items:center;gap:12px"><div class="cat" style="font-size:50px;padding:0">🐱</div><div style="flex:1"><h2 id="profileName">Пипи</h2><div class="sub" id="playerId">ID: PIPI-123456</div><b id="rank">НОВИЧОК</b></div><button class="secondary" onclick="renamePlayer()">✎</button></div>
+ <div class="stats" style="margin-top:15px"><div class="stat"><b id="profileBest">0</b><small>Рекорд</small></div><div class="stat"><b id="profileGames">0</b><small>Игр</small></div><div class="stat"><b id="profileItems">1</b><small>Предметы</small></div></div>
+ <div class="barrow"><div class="barlabel"><span>До следующего ранга</span><b id="rankProgress">0 / 1000</b></div><div class="bar"><i id="rankBar" style="width:0%"></i></div></div></div>
+ <div class="section-title">Друзья <button onclick="addFriend()">＋ Добавить</button></div><div class="panel" id="friends"></div>
+ <div class="panel"><b>🏆 Ранги</b><div class="friend"><div class="face">🥉</div><div class="info"><b>Бронза</b><small>1 000 очков</small></div></div><div class="friend"><div class="face">🥈</div><div class="info"><b>Серебро</b><small>5 000 очков</small></div></div><div class="friend"><div class="face">🥇</div><div class="info"><b>Золото</b><small>10 000 очков</small></div></div></div>
+</section>
+</main>
+
+<nav>
+ <button class="navbtn active" data-screen="home" onclick="show('home')"><span>🎮</span>Игра</button>
+ <button class="navbtn" data-screen="pet" onclick="show('pet')"><span>🐾</span>Питомец</button>
+ <button class="navbtn" data-screen="levels" onclick="show('levels')"><span>🗺️</span>Уровни</button>
+ <button class="navbtn" data-screen="skins" onclick="show('skins')"><span>👕</span>Скины</button>
+ <button class="navbtn" data-screen="shop" onclick="show('shop')"><span>🎡</span>Магазин</button>
+ <button class="navbtn" data-screen="profile" onclick="show('profile')"><span>👤</span>Профиль</button>
 </nav>
-</div>
-<div id="toast" class="toast hidden"></div><div id="modal"></div>
+<div class="toast" id="toast"></div>
+
 <script>
-const $=s=>document.querySelector(s);
-const fresh=()=>({
- name:"ПипиДруг",id:"PIPI-"+Math.floor(100000+Math.random()*900000),
- coins:100,record:0,total:0,games:0,level:1,xp:0,unlocked:1,completed:[],
- daily:"",streak:0,lastWheel:"",energy:0,
- pet:{hunger:70,happy:80,food:0},items:["classic"],inventory:[],
- friends:[]
-});
-let s;
-try{s={...fresh(),...JSON.parse(localStorage.getItem("pipiSave")||"{}")};s.pet={...fresh().pet,...s.pet}}
-catch(e){s=fresh()}
-function save(){localStorage.setItem("pipiSave",JSON.stringify(s));$("#coins").textContent=s.coins}
-function toast(t){let e=$("#toast");e.textContent=t;e.classList.remove("hidden");clearTimeout(window.tt);window.tt=setTimeout(()=>e.classList.add("hidden"),2200)}
-function cat(){return `<svg class="cat" viewBox="0 0 16 16" shape-rendering="crispEdges" aria-label="Пипи">
-<path fill="#b5efff" d="M1 5h2V2h3v2h5V2h3v3h1v7h-2v2H3v-2H1z"/>
-<path fill="#ff8bd4" d="M3 3h2v2H3zm7 0h2v2h-2z"/>
-<path fill="#3154a7" d="M3 7h3v3H3zm7 0h3v3h-3z"/>
-<path fill="#fff" d="M4 7h1v1H4zm7 0h1v1h-1z"/>
-<path fill="#ff76c8" d="M7 10h2v1H7zm-1 2h1v1H6zm3 0h1v1H9z"/>
-<path fill="#fff" d="M1 7h1v2H1zm13 0h1v2h-1z"/>
-</svg>`}
-let page="splash",board=Array(64).fill(""),pieces=[],selected=-1,points=0,levelMode=false;
-const shapes=[[[1,1],[1,1]],[[1],[1],[1],[1]],[[1,1,1]],[[1,1],[1,0]],[[1,1,1],[0,1,0]],[[1,0],[1,0],[1,1]],[[1,1,0],[0,1,1]],[[1]],[[1,1],[1,1],[1,1]]];
-const colors=["#45dcff","#ff65c7","#a78bfa","#7cf2bd","#ffd36b"];
-function go(p){page=p;render();window.scrollTo({top:0,behavior:"smooth"})}
-$("#nav").onclick=e=>{let b=e.target.closest("[data-page]");if(b)go(b.dataset.page)};
-function render(){
- $("#coins").textContent=s.coins;
- $("#header").classList.toggle("hidden",["splash","login"].includes(page));
- $("#nav").classList.toggle("hidden",["splash","login"].includes(page));
- document.querySelectorAll(".nav button").forEach(b=>b.classList.toggle("active",b.dataset.page===page));
- let m=$("#screen");
- if(page==="splash"){m.innerHTML=`<div style="min-height:78vh;display:grid;align-content:center;text-align:center;gap:18px">
- <div style="font-weight:1000;font-size:30px;text-shadow:0 0 20px #45dcff">NEON BLOCKS<br><span style="color:var(--pink)">✦ PIPI ✦</span></div>
- ${cat()}<p class="muted">Собирай комбинации. Находи сокровища.<br>Заботься о Пипи.</p><button class="btn" onclick="go('login')">Начать приключение ✨</button></div>`;return}
- if(page==="login"){m.innerHTML=`<div style="min-height:75vh;display:grid;align-content:center;text-align:center;gap:13px">${cat()}<h1>Добро пожаловать!</h1><p class="muted">Твоё приключение начинается здесь.</p><button class="btn" onclick="toast('Google авторизация ещё не подключена')">🌈 Продолжить с Google</button><button class="btn secondary" onclick="toast('Яндекс ID ещё не подключён')">🟡 Продолжить с Яндекс ID</button><button class="btn cyan" onclick="go('home')">Играть как гость</button><p class="tiny">Гостевой прогресс сохраняется на этом устройстве.</p></div>`;return}
- if(page==="home"){m.innerHTML=`<div class="hero"><div class="row"><div class="grow"><div class="tiny">ТВОЁ ПРИКЛЮЧЕНИЕ</div><h1>Привет, ${esc(s.name)}!</h1><p class="muted">Пипи уже ждёт тебя.</p><button class="btn" onclick="newGame()">Играть →</button></div>${cat()}</div><p>⭐ Уровень ${s.level}　🏆 Рекорд ${s.record}</p></div>
- <div class="section"><h2>Быстрый доступ</h2></div><div class="grid2">
- <button class="tile" onclick="go('pet')"><div class="emoji">🐾</div><h3>Мой Пипи</h3><div class="tiny">Корм, игрушки, одежда</div></button>
- <button class="tile" onclick="go('levels')"><div class="emoji">🗺️</div><h3>Уровни</h3><div class="tiny">Открыто: ${s.unlocked}</div></button>
- <button class="tile" onclick="go('shop')"><div class="emoji">🎡</div><h3>Магазин</h3><div class="tiny">Колесо удачи</div></button>
- <button class="tile" onclick="daily()"><div class="emoji">🎁</div><h3>Ежедневный приз</h3><div class="tiny">${s.daily===today()?"Уже получен":"Забрать монеты"}</div></button></div>
- <div class="section"><h2>Прогресс</h2></div><div class="panel"><div class="row between"><span class="muted">Опыт до уровня ${s.level+1}</span><b>${s.xp%100}/100</b></div><div class="bar"><i style="width:${s.xp%100}%"></i></div></div>`;return}
- if(page==="game"){m.innerHTML=`<div class="row between"><div><div class="tiny">КЛАССИЧЕСКИЙ РЕЖИМ</div><h1>Неоновые блоки</h1></div><button class="btn secondary" onclick="newGame()">↻</button></div>
- <div class="grid2"><div class="panel"><div class="tiny">ОЧКИ</div><h2>${points}</h2></div><div class="panel"><div class="tiny">РЕКОРД</div><h2>${Math.max(s.record,points)}</h2></div></div>
- <div id="board" class="board"></div><b>Выбери фигуру</b><div id="pieces" class="pieces"></div>
- <div class="panel" style="margin-top:14px"><div class="row"><div class="grow"><b>⚡ Импульс реактора</b><div class="tiny">Очищает центр поля при 100% энергии.</div><div class="bar"><i style="width:${s.energy}%"></i></div></div><button class="btn cyan" onclick="pulse()" ${s.energy<100?"disabled":""}>Взрыв</button></div></div>
- <p class="tiny">Выбери фигуру, затем нажми на поле, чтобы её поставить.</p>`;draw();return}
- if(page==="pet"){let p=s.pet;m.innerHTML=`<div class="row between"><div><div class="tiny">ТВОЙ КОМПАНЬОН</div><h1>Пипи</h1><p class="muted">Маленький друг, большие приключения.</p></div><button class="btn secondary" onclick="rename()">✎ Имя</button></div>
- <div class="petroom"><div class="bubble">${p.hunger<30?"Я голодный…":p.happy<30?"Поиграем?":"Мурр… я тебя ждал! 💗"}</div>${cat()}</div>
- <div class="panel" style="margin-top:12px">${stat("🍗 Сытость",p.hunger)}${stat("💗 Радость",p.happy)}</div>
- <div class="grid2" style="margin-top:12px"><button class="tile" onclick="feed()"><div class="emoji">🍓</div><h3>Покормить</h3><div class="tiny">Корма: ${p.food}</div></button><button class="tile" onclick="playPet()"><div class="emoji">🧶</div><h3>Поиграть</h3><div class="tiny">Поднять настроение</div></button></div>
- <div class="section"><h2>Вещи Пипи</h2><button class="btn secondary" onclick="go('skins')">Открыть</button></div><div class="panel">Открыто предметов: ${s.inventory.length}</div>`;return}
- if(page==="levels"){m.innerHTML=`<div class="tiny">КАМПАНИЯ</div><h1>Карта уровней</h1><p class="muted">Проходи испытания, собирай звёзды и находи вещи для Пипи.</p><div class="panel"><b>🌌 Мир 1: Неоновый город</b><p class="tiny">Пройдено: ${s.completed.length}</p></div><div class="grid3" style="margin-top:12px">${Array.from({length:24},(_,i)=>{let n=i+1,open=n<=s.unlocked;return `<button class="tile" ${open?`onclick="startLevel(${n})"`:"disabled"} style="opacity:${open?1:.4}"><div class="emoji">${s.completed.includes(n)?"⭐":open?"🔹":"🔒"}</div><h3>Уровень ${n}</h3><div class="tiny">${open?"Цель: набрать очки":"Закрыт"}</div></button>`}).join("")}</div>`;return}
- if(page==="skins"){let items=[["classic","🐱","Пипи классик",0],["hoodie","🩵","Голубой худи",150],["hat","🧢","Розовая шапка",220],["space","🚀","Космокот",700],["ball","⚽","Мячик",80],["yarn","🧶","Клубок",100],["bed","🛏️","Звёздная лежанка",350],["glow","✨","Неоновый след",300]];
- m.innerHTML=`<div class="tiny">ГАРДЕРОБ И КОЛЛЕКЦИЯ</div><h1>Скины и вещи</h1><p class="muted">Покупай предметы за игровые монеты.</p><div class="panel row">${cat()}<div><b>Твой Пипи</b><div class="tiny">В коллекции: ${s.inventory.length}</div></div></div><div class="grid2" style="margin-top:12px">${items.map(it=>{let owned=s.items.includes(it[0]);return `<div class="tile" style="text-align:center"><div class="emoji">${it[1]}</div><h3>${it[2]}</h3><div class="tiny">${owned?"Уже открыто":it[3]+" 🪙"}</div><button class="btn ${owned?"secondary":""}" style="margin-top:9px;width:100%" onclick="buy('${it[0]}',${it[3]},'${it[1]}')" ${owned?"disabled":""}>${owned?"Получено":"Купить"}</button></div>`}).join("")}</div>`;return}
- if(page==="shop"){m.innerHTML=`<div class="tiny">НАГРАДЫ И ПОКУПКИ</div><h1>Магазин Пипи</h1><p class="muted">Колесо удачи и полезные вещи.</p><div class="panel" style="text-align:center"><div class="tiny">БЕСПЛАТНОЕ ВРАЩЕНИЕ РАЗ В ДЕНЬ</div><h2>Колесо удачи 🎡</h2><div class="pointer"></div><div id="wheel" class="wheel"></div><div class="tiny">40% маленький приз · 25% обычный<br>15% хороший · 10% редкий · 7% эпический · 3% джекпот</div><button class="btn full" style="margin-top:14px" onclick="spin(false)" ${s.lastWheel===today()?"disabled":""}>${s.lastWheel===today()?"Возвращайся завтра":"Крутить бесплатно"}</button><button class="btn secondary full" style="margin-top:8px" onclick="spin(true)" ${s.coins<50?"disabled":""}>Дополнительное вращение — 50 🪙</button></div>
- <div class="section"><h2>Популярное</h2></div><div class="grid2"><button class="tile" onclick="buyFood()"><div class="emoji">🍓</div><h3>Корм ×3</h3><div class="tiny">45 монет</div></button><button class="tile" onclick="go('skins')"><div class="emoji">👕</div><h3>Одежда</h3><div class="tiny">Выбрать вещи</div></button></div>`;return}
- if(page==="account"){m.innerHTML=`<div class="tiny">ТВОЙ ПРОФИЛЬ</div><h1>Аккаунт</h1><div class="panel"><div class="row">${cat()}<div class="grow"><input class="form" id="nick" maxlength="18" value="${esc(s.name)}"><div class="tiny" style="margin-top:8px">ID: <b>${s.id}</b></div><button class="btn secondary" style="margin-top:8px" onclick="copyId()">Копировать ID</button></div></div><button class="btn full" style="margin-top:12px" onclick="saveNick()">Сохранить ник</button></div>
- <div class="section"><h2>Статистика</h2></div><div class="grid2"><div class="tile"><div class="emoji">🏆</div><div class="tiny">Рекорд</div><h2>${s.record}</h2></div><div class="tile"><div class="emoji">🗺️</div><div class="tiny">Уровни</div><h2>${s.completed.length}</h2></div><div class="tile"><div class="emoji">🎮</div><div class="tiny">Партий</div><h2>${s.games}</h2></div><div class="tile"><div class="emoji">✨</div><div class="tiny">Всего очков</div><h2>${s.total}</h2></div></div>
- <div class="section"><h2>Ранг</h2></div><div class="panel"><h2>${s.record>=10000?"💎 Алмаз":s.record>=5000?"🥇 Золото":s.record>=1500?"🥈 Серебро":"🥉 Бронза"}</h2><div class="tiny">Ранг зависит от твоих игровых результатов.</div></div>
- <div class="section"><h2>Друзья</h2></div><div class="panel"><p class="tiny">В демо-версии можно хранить ID друзей локально. Реальный поиск игроков требует сервера.</p><input class="form" id="friend" placeholder="PIPI-123456"><button class="btn cyan full" style="margin-top:8px" onclick="addFriend()">Добавить ID</button>${s.friends.map(f=>`<p>🐾 ${esc(f)} <button class="btn secondary" onclick="removeFriend('${f}')">×</button></p>`).join("")}</div>
- <div class="section"><h2>Настройки</h2></div><div class="panel"><button class="btn secondary full" onclick="daily()">🎁 Ежедневный подарок</button><button class="btn secondary full" style="margin-top:8px" onclick="resetGame()">Сбросить прогресс</button></div>`;return}
+const $=id=>document.getElementById(id);
+const today=()=>new Date().toLocaleDateString('en-CA');
+const defaults={coins:1250,gems:45,score:0,best:0,games:0,level:1,name:'Пипи',id:'PIPI-'+Math.floor(100000+Math.random()*899999),hunger:70,happy:85,energy:60,bond:12,owned:['classic'],equipped:'classic',dailyDate:'',friends:[{name:'Котик_228',face:'🐈',status:'Онлайн'},{name:'ЛунаПипи',face:'🐈‍⬛',status:'2 ч назад'}],items:1};
+let state;
+try{state={...defaults,...JSON.parse(localStorage.getItem('pipi-save')||'{}')}}catch(e){state={...defaults}}
+function save(){localStorage.setItem('pipi-save',JSON.stringify(state));refresh()}
+function toast(t){let el=$('toast');el.textContent=t;el.classList.add('show');clearTimeout(window.tt);window.tt=setTimeout(()=>el.classList.remove('show'),2200)}
+function show(id){document.querySelectorAll('.screen').forEach(x=>x.classList.toggle('active',x.id===id));document.querySelectorAll('.navbtn').forEach(x=>x.classList.toggle('active',x.dataset.screen===id));if(id==='game')drawBoard();window.scrollTo({top:0,behavior:'smooth'})}
+function catEmoji(){return ({classic:'🐱',yuki:'🐈',cosmo:'👾',pirate:'🐱‍👤',witch:'🧙',dino:'🦖',sleepy:'😺'})[state.equipped]||'🐱'}
+function refresh(){
+ $('coins').textContent=state.coins;$('gems').textContent=state.gems;$('helloName').textContent=state.name+'!';$('homeScore').textContent=state.score;$('homeBest').textContent=state.best;$('homeLevel').textContent=state.level;
+ $('homeCat').textContent=catEmoji();$('petCat').textContent=catEmoji();
+ ['hunger','happy','energy'].forEach(k=>{$(k+'Num').textContent=state[k]+'%';$(k+'Bar').style.width=state[k]+'%'});
+ $('bondNum').textContent=state.bond+' / 100';$('bondBar').style.width=state.bond+'%';
+ $('dailyBtn').textContent=state.dailyDate===today()?'Получено ✓':'+100 🪙';$('dailyBtn').disabled=state.dailyDate===today();
+ $('profileName').textContent=state.name;$('playerId').textContent='ID: '+state.id;$('profileBest').textContent=state.best;$('profileGames').textContent=state.games;$('profileItems').textContent=state.items;
+ let rank=state.best>=10000?'ЗОЛОТО':state.best>=5000?'СЕРЕБРО':state.best>=1000?'БРОНЗА':'НОВИЧОК';$('rank').textContent=rank;
+ let next=state.best<1000?1000:state.best<5000?5000:state.best<10000?10000:10000;
+ $('rankProgress').textContent=state.best+' / '+next;$('rankBar').style.width=Math.min(100,state.best/next*100)+'%';
+ renderFriends();renderLevels();renderSkins();renderShop();
 }
-function stat(label,n){return `<div class="stat"><span>${label}</span><div class="bar"><i style="width:${n}%"></i></div><b>${n}%</b></div>`}
-function esc(x){return String(x).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
-function today(){return new Date().toLocaleDateString("en-CA")}
-function daily(){if(s.daily===today()){toast("Подарок уже получен сегодня");return} s.daily=today();s.streak++;let n=s.streak%7===0?100:25;s.coins+=n;save();modal(`🎁<h2>Подарок Пипи!</h2><p>Ты получил ${n} монет!</p><button class="btn full" onclick="closeModal();render()">Ура!</button>`)}
-function modal(html){$("#modal").innerHTML=`<div class="modalbg" onclick="if(event.target===this)closeModal()"><div class="modal" style="text-align:center">${html}</div></div>`}
-function closeModal(){$("#modal").innerHTML=""}
-function rename(){modal(`<h2>Имя питомца</h2><input class="form" id="petname" maxlength="16" value="Пипи"><button class="btn full" style="margin-top:10px" onclick="closeModal();toast('Внешность Пипи скоро можно будет менять')">Сохранить</button>`)}
-function feed(){if(!s.pet.food){toast("Корма нет — загляни в магазин");return}s.pet.food--;s.pet.hunger=Math.min(100,s.pet.hunger+35);s.pet.happy=Math.min(100,s.pet.happy+5);save();render();toast("Пипи доволен! 💗")}
-function playPet(){s.pet.happy=Math.min(100,s.pet.happy+10);save();render();toast("Пипи рад твоему вниманию!")}
-function buyFood(){if(s.coins<45){toast("Не хватает монет");return}s.coins-=45;s.pet.food+=3;save();render();toast("Корм куплен 🍓")}
-function buy(id,cost,emoji){if(s.items.includes(id)){toast("Уже есть");return}if(s.coins<cost){toast("Не хватает монет");return}s.coins-=cost;s.items.push(id);s.inventory.push(emoji);save();render();toast("Предмет добавлен в коллекцию!")}
-function spin(extra){if(extra){if(s.coins<50){toast("Не хватает монет");return}s.coins-=50}else{if(s.lastWheel===today()){toast("Бесплатное вращение уже использовано");return}s.lastWheel=today()}
- save();let r=Math.random()*100,prize;if(r<40)prize={coins:15,name:"Маленький приз"};else if(r<65)prize={coins:35,name:"Обычный приз"};else if(r<80)prize={coins:60,name:"Хороший приз"};else if(r<90)prize={item:"🧶",name:"Редкая игрушка"};else if(r<97)prize={item:"🩵",name:"Эпический костюм"};else prize={item:"🚀",name:"ДЖЕКПОТ!"};
- let w=$("#wheel");if(w)w.style.transform=`rotate(${1440+Math.random()*360}deg)`;
- setTimeout(()=>{if(prize.coins)s.coins+=prize.coins;else s.inventory.push(prize.item);save();modal(`<div style="font-size:45px">${prize.item||"🪙"}</div><h2>${prize.name}</h2><p>${prize.coins?"+ "+prize.coins+" монет":"Новая вещь для Пипи!"}</p><button class="btn full" onclick="closeModal();render()">Забрать</button>`);render()},2200)}
-function copyId(){if(navigator.clipboard)navigator.clipboard.writeText(s.id).then(()=>toast("ID скопирован")).catch(()=>toast(s.id));else toast(s.id)}
-function saveNick(){let n=$("#nick").value.trim();if(!n)return toast("Введи никнейм");s.name=n.slice(0,18);save();render();toast("Ник сохранён")}
-function addFriend(){let e=$("#friend"),v=e.value.trim().toUpperCase();if(!/^PIPI-\d{6}$/.test(v))return toast("Формат ID: PIPI-123456");if(v===s.id)return toast("Это твой ID");if(s.friends.includes(v))return toast("Уже добавлен");s.friends.push(v);save();render()}
-function removeFriend(id){s.friends=s.friends.filter(x=>x!==id);save();render()}
-function resetGame(){modal(`<h2>Сбросить прогресс?</h2><button class="btn secondary" onclick="closeModal()">Отмена</button> <button class="btn" onclick="localStorage.removeItem('pipiSave');location.reload()">Сбросить</button>`)}
-function deal(){pieces=[0,1,2].map(()=>({shape:shapes[Math.floor(Math.random()*shapes.length)],color:colors[Math.floor(Math.random()*colors.length)]}))}
-function newGame(){board=Array(64).fill("");points=0;selected=-1;levelMode=false;deal();go("game")}
-function startLevel(n){levelMode=n;newGame();levelMode=n;toast("Уровень "+n+": набери "+n*500+" очков")}
-function draw(){let b=$("#board"),p=$("#pieces");if(!b||!p)return;b.innerHTML=board.map((v,i)=>`<button class="cell ${v?"f":""}" style="${v?`--c:${v}`:""}" onclick="place(${i})"></button>`).join("");
- p.innerHTML=pieces.map((x,i)=>`<button class="piece ${selected===i?"sel":""}" onclick="selectPiece(${i})">${x?shapeHtml(x.shape,x.color):"✓"}</button>`).join("")}
-function shapeHtml(shape,color){return `<div class="shape" style="grid-template-columns:repeat(${Math.max(...shape.map(r=>r.length))},14px);--c:${color}">${shape.flatMap(r=>r.map(v=>`<span class="sq" style="${v?"":"visibility:hidden"}"></span>`)).join("")}</div>`}
-function selectPiece(i){if(!pieces[i])return;selected=i;draw()}
-function can(shape,r,c){for(let y=0;y<shape.length;y++)for(let x=0;x<shape[y].length;x++)if(shape[y][x]&&(r+y>=8||c+x>=8||board[(r+y)*8+c+x]))return false;return true}
-function place(i){if(selected<0||!pieces[selected])return toast("Сначала выбери фигуру");let sh=pieces[selected].shape,col=i%8,row=Math.floor(i/8),p=pieces[selected];if(!can(sh,row,col))return toast("Фигура не помещается");
- let n=0;sh.forEach((r,y)=>r.forEach((v,x)=>{if(v){board[(row+y)*8+col+x]=p.color;n++}}));points+=n*10;pieces[selected]=null;selected=-1;
- let clear=new Set();for(let r=0;r<8;r++)if(board.slice(r*8,r*8+8).every(Boolean))for(let c=0;c<8;c++)clear.add(r*8+c);for(let c=0;c<8;c++)if(board.filter((v,i)=>i%8===c).every(Boolean))for(let r=0;r<8;r++)clear.add(r*8+c);
- if(clear.size){points+=clear.size*15;s.lines=(s.lines||0)+1;clear.forEach(i=>board[i]="");s.energy=Math.min(100,s.energy+clear.size*3);s.coins+=clear.size>=16?5:0;toast("Линия очищена! ✨")}
- if(pieces.every(x=>!x))deal();
- save();draw();
- if(levelMode&&points>=levelMode*500){let n=levelMode;if(!s.completed.includes(n))s.completed.push(n);s.unlocked=Math.max(s.unlocked,n+1);s.coins+=35;s.xp+=25;s.pet.food++;save();modal(`<h2>Уровень пройден! ⭐</h2><p>+35 монет · +25 XP · +1 корм</p><button class="btn full" onclick="closeModal();go('levels')">Продолжить</button>`);return}
- if(!pieces.some(p=>p&&Array.from({length:8},(_,r)=>Array.from({length:8},(_,c)=>can(p.shape,r,c))).flat().some(Boolean))){s.games++;s.record=Math.max(s.record,points);s.total+=points;s.xp+=Math.floor(points/20);s.coins+=Math.floor(points/150);save();modal(`<h2>Игра окончена</h2><p>Очки: ${points}</p><p>Награда: ${Math.floor(points/150)} монет</p><button class="btn full" onclick="closeModal();newGame()">Играть снова</button>`);return}
- render()}
-function pulse(){if(s.energy<100)return toast("Заряди ядро до 100%");for(let r=2;r<5;r++)for(let c=2;c<5;c++)board[r*8+c]="";s.energy=0;points+=120;save();render();toast("Импульс! +120 очков")}
-function boot(){render();setTimeout(()=>{if(page==="splash")go("login")},1400)}
-boot();
+function claimDaily(){if(state.dailyDate===today())return toast('Награда уже получена!');state.dailyDate=today();state.coins+=100;save();toast('Получено 100 монет! 🎁')}
+function petAction(a){
+ if(a==='feed'){if(state.coins<10)return toast('Корм стоит 10 монет');state.coins-=10;state.hunger=Math.min(100,state.hunger+25);state.happy=Math.min(100,state.happy+3);toast('Ням-ням! 🐟')}
+ if(a==='play'){if(state.energy<15)return toast('Пипи устал. Пора спать 🌙');state.energy-=15;state.happy=Math.min(100,state.happy+15);state.bond=Math.min(100,state.bond+8);state.coins+=5;toast('Игра окончена! +5 монет')}
+ if(a==='sleep'){state.energy=Math.min(100,state.energy+30);state.hunger=Math.max(0,state.hunger-5);toast('Сладких снов, Пипи 🌙')}
+ save();
+}
+const SHAPES=[[[0,0],[1,0],[2,0]],[[0,0],[0,1],[1,1]],[[0,0],[1,0],[0,1],[1,1]],[[0,0],[1,0],[2,0],[1,1]],[[0,0],[0,1],[0,2]],[[0,0],[1,0],[2,0],[3,0]],[[0,0],[1,0],[1,1]],[[0,0],[1,0],[2,0],[0,1],[1,1],[2,1]]];
+let board=[],pieces=[],selected=0,gameScore=0,gameLines=0;
+function startGame(){board=Array.from({length:8},()=>Array(8).fill(0));gameScore=0;gameLines=0;state.games++;newPieces();show('game');updateGame();save()}
+function newPieces(){pieces=Array.from({length:3},()=>({shape:SHAPES[Math.floor(Math.random()*SHAPES.length)],color:Math.floor(Math.random()*3)}));selected=0;drawPieces()}
+function canPlace(shape,r,c){return shape.every(([x,y])=>r+y<8&&c+x<8&&!board[r+y][c+x])}
+function drawBoard(){if(!board.length)board=Array.from({length:8},()=>Array(8).fill(0));let el=$('board');el.innerHTML='';for(let r=0;r<8;r++)for(let c=0;c<8;c++){let b=document.createElement('button');b.className='cell'+(board[r][c]?' filled '+(['','pink','gold'][board[r][c]]||''):'');b.onclick=()=>place(r,c);el.appendChild(b)}}
+function drawPieces(){let el=$('pieces');el.innerHTML='';pieces.forEach((p,i)=>{let b=document.createElement('button');b.className='piece'+(selected===i?' selected':'');if(!p){b.textContent='✓';b.disabled=true}else{let w=Math.max(...p.shape.map(a=>a[0]))+1,h=Math.max(...p.shape.map(a=>a[1]))+1,g=document.createElement('div');g.className='piece-grid';g.style.gridTemplateColumns=`repeat(${w},13px)`;for(let y=0;y<h;y++)for(let x=0;x<w;x++){let d=document.createElement('i');if(!p.shape.some(a=>a[0]===x&&a[1]===y))d.className='empty';g.appendChild(d)}b.appendChild(g);b.onclick=()=>{selected=i;drawPieces()}}el.appendChild(b)})}
+function updateGame(){$('gameScore').textContent=gameScore;$('gameBest').textContent=state.best;$('gameLines').textContent=gameLines;drawBoard();drawPieces()}
+function place(r,c){
+ let p=pieces[selected];if(!p)return toast('Выбери фигуру');if(!canPlace(p.shape,r,c))return toast('Сюда фигура не помещается');
+ p.shape.forEach(([x,y])=>board[r+y][c+x]=p.color+1);gameScore+=p.shape.length;pieces[selected]=null;
+ let rows=[],cols=[];for(let y=0;y<8;y++)if(board[y].every(Boolean))rows.push(y);for(let x=0;x<8;x++)if(board.every(row=>row[x]))cols.push(x);
+ rows.forEach(y=>board[y].fill(0));cols.forEach(x=>board.forEach(row=>row[x]=0));
+ let cleared=rows.length+cols.length;if(cleared){gameLines+=cleared;gameScore+=cleared*10;toast('Линия очищена! ✨')}
+ if(gameScore>state.best)state.best=gameScore;state.score+=p.shape.length+(cleared*10);
+ if(pieces.every(x=>!x))newPieces();
+ else if(!pieces.some(p=>p&&Array.from({length:8},(_,y)=>Array.from({length:8},(_,x)=>canPlace(p.shape,y,x))).flat().some(Boolean))){state.score+=gameScore;save();toast('Игра окончена! Результат сохранён.');board=Array.from({length:8},()=>Array(8).fill(0));gameScore=0;gameLines=0;newPieces()}
+ updateGame();save();
+}
+const skins=[{id:'classic',name:'Классик',e:'🐱',p:0,d:'Любимый котик',r:false},{id:'yuki',name:'Юки',e:'🐈',p:150,d:'Снежный образ',r:false},{id:'cosmo',name:'Космокот',e:'👾',p:300,d:'Космический гость',r:true},{id:'pirate',name:'Пират',e:'🐱‍👤',p:250,d:'Гроза морей',r:false},{id:'witch',name:'Ведьмочка',e:'🧙',p:400,d:'Магия ночи',r:true},{id:'dino',name:'Динозаврик',e:'🦖',p:350,d:'Милый динозавр',r:false},{id:'sleepy',name:'Соня',e:'😺',p:200,d:'Для сладких снов',r:false}];
+let skinFilter='all';
+function renderSkins(){let el=$('skinGrid');if(!el)return;let arr=skins.filter(s=>skinFilter==='owned'?state.owned.includes(s.id):skinFilter==='rare'?s.r:true);el.innerHTML=arr.map(s=>`<div class="card"><div class="art">${s.e}</div><b>${s.name}</b><small>${s.d}</small><button class="buy ${state.equipped===s.id?'equipped':''}" onclick="skinAction('${s.id}')">${state.equipped===s.id?'✓ Надет':state.owned.includes(s.id)?'Надеть':s.p+' 🪙'}</button></div>`).join('')}
+function skinTab(f,b){skinFilter=f;document.querySelectorAll('#skins .tab').forEach(x=>x.classList.remove('active'));b.classList.add('active');renderSkins()}
+function skinAction(id){let s=skins.find(x=>x.id===id);if(state.owned.includes(id)){state.equipped=id;toast('Образ экипирован!')}else if(state.coins>=s.p){state.coins-=s.p;state.owned.push(id);state.items++;state.equipped=id;toast('Новый образ получен! ✨')}else return toast('Не хватает монет');save()}
+function spinWheel(){if(state.coins<50)return toast('Нужно 50 монет');state.coins-=50;$('wheel').animate([{transform:'rotate(0)'},{transform:'rotate(1080deg)'}],{duration:1100,easing:'cubic-bezier(.12,.7,.1,1)'});let r=Math.random(),msg;if(r<.05){let s=skins.find(s=>s.r&&!state.owned.includes(s.id));if(s){state.owned.push(s.id);state.items++;msg='Легендарный образ: '+s.name+'!'}else{state.coins+=250;msg='Дубликат! +250 монет'}}else if(r<.20){let s=skins.find(s=>!state.owned.includes(s.id));if(s){state.owned.push(s.id);state.items++;msg='Новый скин: '+s.name+'!'}else{state.gems+=5;msg='+5 кристаллов!'}}else if(r<.60){state.coins+=10;msg='+10 монет'}else{state.coins+=5;msg='Утешительный приз: +5 монет'}save();setTimeout(()=>toast(msg),500)}
+function renderShop(){let el=$('shopGrid');if(!el)return;let list=[['🍲','Запас корма','Голод +40',40,'food'],['🧸','Мягкая игрушка','Счастье +15',60,'toy'],['💎','Кристаллы ×5','Редкая валюта',100,'gems'],['🎁','Сюрприз-бокс','Случайная награда',120,'box']];el.innerHTML=list.map(i=>`<div class="card"><div class="art">${i[0]}</div><b>${i[1]}</b><small>${i[2]}</small><button class="buy" onclick="buyItem('${i[4]}',${i[3]})">${i[3]} 🪙</button></div>`).join('')}
+function buyItem(type,p){if(state.coins<p)return toast('Не хватает монет');state.coins-=p;if(type==='food')state.hunger=Math.min(100,state.hunger+40);if(type==='toy'){state.happy=Math.min(100,state.happy+15);state.bond=Math.min(100,state.bond+5)}if(type==='gems')state.gems+=5;if(type==='box'){state.coins+=Math.floor(Math.random()*80);state.items++}save();toast('Покупка совершена!')}
+function openLevel(n){if(n>6)return toast('Этот мир пока закрыт!');state.level=Math.max(state.level,n);startGame();toast('Уровень '+n+' начался!')}
+function renderLevels(){if(!$('levelList'))return;$('levelCount').textContent=Math.min(24,state.level)+'/24';$('levelList').innerHTML=Array.from({length:6},(_,i)=>{let n=i+1,open=n<=Math.max(1,Math.min(6,state.level));return `<div class="friend"><div class="face">${open?'⭐':'🔒'}</div><div class="info"><b>Уровень ${n}</b><small>${open?'Цель: набрать очки':'Сначала пройди предыдущий уровень'}</small></div><button class="secondary" onclick="openLevel(${n})">${open?'Играть':'🔒'}</button></div>`}).join('')}
+function renderFriends(){if(!$('friends'))return;$('friends').innerHTML=state.friends.length?state.friends.map(f=>`<div class="friend"><div class="face">${f.face||'🐱'}</div><div class="info"><b>${escapeHtml(f.name)}</b><small>${escapeHtml(f.status||f.id||'Друг')}</small></div></div>`).join(''):'Пока нет друзей.'}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function renamePlayer(){let v=prompt('Как тебя зовут?',state.name);if(v&&v.trim()){state.name=v.trim().slice(0,18);save()}}
+function addFriend(){let v=prompt('Введи имя или ID друга:');if(!v||!v.trim())return;if(state.friends.some(f=>f.name.toLowerCase()===v.trim().toLowerCase()))return toast('Друг уже добавлен');state.friends.push({name:v.trim(),face:'🐱',status:'Добавлен локально'});save();toast('Друг добавлен на этом устройстве!')}
+window.addEventListener('load',()=>{board=Array.from({length:8},()=>Array(8).fill(0));newPieces();refresh();updateGame()});
 </script>
 </body>
 </html>
-
-
